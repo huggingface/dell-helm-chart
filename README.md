@@ -1,2 +1,1 @@
-# dell-ai
-Dell x Hugging Face Partnership 2025
+# Dell x Hugging Face Partnership 2025

@@ -1,0 +1,8 @@
+apiVersion: v2
+name: dell-ai
+description: Hugging Face's Helm Chart for deploying open-source AI applications on Dell Platforms
+type: application
+version: 0.1.0
+maintainers:
+  - name: huggingface
+  - name: alvarobartt

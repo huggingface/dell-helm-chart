@@ -9,7 +9,7 @@ instanceName: xe9680-nvidia-h100
 # you need to have access on Dell to as many instances as replicas you define
 numReplicas: 1
 
-# modelId defines the Hugging Face Hub model ID for the model
+# modelId defines the model ID for the model to be deployed, must be supported on the Dell Enterprise Hub
 modelId: "meta-llama/meta-llama-3-70b-instruct"
 
 # Environment variables for the TGI container

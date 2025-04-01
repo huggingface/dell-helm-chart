@@ -1,6 +1,6 @@
 # name defines the name of the application to be deployed, being the name shared
 # by the Deployment, Service and Ingress
-name: tgi
+appName: tgi
 
 # instanceName defines the Dell instance in which the workload will run
 instanceName: xe9680-nvidia-h100

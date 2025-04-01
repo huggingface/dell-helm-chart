@@ -26,7 +26,6 @@
 
 {{- $output := dict
   "provider" $provider
-  "requests" (dict $gpuResource .Values.numGpus)
   "limits" (dict $gpuResource .Values.numGpus)
 -}}
 

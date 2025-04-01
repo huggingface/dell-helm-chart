@@ -26,7 +26,7 @@
 
 {{- $output := dict
   "provider" $provider
-  "limits" (dict $gpuResource .Values.numGpus)
+  "limits" (dict $gpuResource .Values.env.NUM_SHARD)
 -}}
 
 {{/* Add nodeSelector with GPU type for NVIDIA instances */}}

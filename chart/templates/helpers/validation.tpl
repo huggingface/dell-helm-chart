@@ -1,7 +1,7 @@
 {{- define "validateInputs" -}}
 
 {{- $instanceName := .Values.instanceName -}}
-{{- $numGpus := .Values.numGpus | int -}}
+{{- $numGpus := .Values.env.NUM_SHARD | int -}}
 
 {{- $instances := include "instances" . | fromYaml -}}
 

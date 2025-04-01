@@ -5,11 +5,6 @@ name: tgi
 # instanceName defines the Dell instance in which the workload will run
 instanceName: xe9680-nvidia-h100
 
-# numGpus defines the number of GPUs to use within each instance, but note that
-# not all the instances support any arbitraty number of GPUs, even though those
-# usually are within the 1-8 range (1, 2, 4, 8)
-numGpus: 8
-
 # numReplicas defines the number of replicas for the deployment, but note that
 # you need to have access on Dell to as many instances as replicas you define
 numReplicas: 1
@@ -17,6 +12,11 @@ numReplicas: 1
 # modelId defines the Hugging Face Hub model ID for the model
 modelId: "meta-llama/meta-llama-3-70b-instruct"
 
-# port defines the Text Generation Inference (TGI) port to be exposed, as well
-# as the port defined and exposed within the NGINX Ingress controller and the Service
-port: 80
+# Environment variables for the TGI container
+env:
+  NUM_SHARD: 8  # numGpus defines the number of GPUs to use within each instance
+  PORT: 80      # port defines the TGI port to be exposed, as well as the port defined and exposed within the NGINX Ingress controller and the Service
+  
+  # Additional env vars can be added here, for example:
+  # MAX_INPUT_TOKENS: 8191
+  # MAX_TOTAL_TOKENS: 8192

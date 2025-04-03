@@ -11,6 +11,8 @@ spec:
     metadata:
       labels:
         app: {{ .Values.appName | default "tgi" }}
+        hf.co/model: {{ .Values.modelId | lower | replace "/" "-" }}
+        hf.co/task: text-generation
     spec:
       containers:
         - name: {{ .Values.instanceName }}
@@ -25,16 +27,16 @@ spec:
           resources:
             {{- if regexMatch "nvidia" .Values.instanceName }}
             limits:
-              nvidia.com/gpu: {{ .Values.numGpus }}
+              nvidia.com/gpu: {{ .Values.env.NUM_SHARD | quote }}
             {{- else if regexMatch "amd" .Values.instanceName }}
             limits:
-              amd.com/gpu: {{ .Values.numGpus }}
+              amd.com/gpu: {{ .Values.env.NUM_SHARD | quote }}
             {{- end }}
           env:
-            - name: NUM_SHARD
-              value: {{ .Values.numGpus | quote }}
-            - name: PORT
-              value: {{ .Values.port | default (int 80) | quote }}
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
           volumeMounts:
             - mountPath: /dev/shm
               name: dshm
@@ -52,7 +54,7 @@ spec:
             sizeLimit: 1Gi
             {{- else if regexMatch "amd" .Values.instanceName }}
             {{/* NOTE: this is an edge case reported by Dell */}}
-            {{- if and (eq (.Values.modelId | lower ) "deepseek-ai/deepseek-r1-distill-llama-70b") (eq .Values.numGpus 4) }}
+            {{- if and (eq (.Values.modelId | lower ) "deepseek-ai/deepseek-r1-distill-llama-70b") (eq .Values.env.NUM_SHARD 4) }}
             sizeLimit: 512Gi
             {{- else }}
             sizeLimit: 256Gi
@@ -66,6 +68,7 @@ spec:
           hostPath:
             path: /dev/dri
         {{- end }}
+      {{- if regexMatch "nvidia" .Values.instanceName }}
       nodeSelector:
-        {{/* TODO */}}
-        nvidia.com/gpu.product: NVIDIA-H100-80GB-HBM3
+        nvidia.com/gpu.product: {{ include "getNodeSelector" . | quote }}
+      {{- end }}

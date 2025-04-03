@@ -15,4 +15,4 @@ spec:
               service:
                 name: {{ .Values.appName | default "tgi" }}
                 port:
-                  number: {{ .Values.port | default (int 80) }}
+                  number: {{ .Values.env.PORT | default (int 80) }}

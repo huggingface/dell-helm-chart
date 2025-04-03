@@ -6,7 +6,7 @@ spec:
   type: LoadBalancer
   ports:
     - protocol: TCP
-      port: {{ .Values.port | default (int 80) }}
-      targetPort: {{ .Values.port | default (int 80) }}
+      port: {{ .Values.env.PORT | default (int 80) }}
+      targetPort: {{ .Values.env.PORT | default (int 80) }}
   selector:
     app: {{ .Values.appName | default "tgi" }}

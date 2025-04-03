@@ -12,20 +12,25 @@ spec:
       labels:
         app: {{ .Values.appName | default "tgi" }}
     spec:
-      nodeSelector: {{ (include "instance" . | fromYaml).nodeSelector | toYaml | nindent 12 }}
+      nodeSelector: {{ .Values.instanceName | nindent 12 }}
       containers:
         - name: {{ .Values.instanceName }}
-          {{- if eq (include "instance" . | fromYaml).provider "nvidia" }}
+          {{- if regexMatch "nvidia" .Values.instanceName }}
           image: "registry.dell.huggingface.co/enterprise-dell-inference-{{ .Values.modelId | lower | replace "/" "-" }}:latest"
-          {{- else if eq (include "instance" . | fromYaml).provider "amd" }}
+          {{- else if regexMatch "amd" .Values.instanceName }}
           image: "registry.dell.huggingface.co/enterprise-dell-inference-{{ .Values.modelId | lower | replace "/" "-" }}-amd:latest"
           securityContext:
             seccompProfile:
               type: Unconfined
           {{- end }}
           resources:
-            requests: {{ (include "instance" . | fromYaml).requests | toYaml | nindent 16 }}
-            limits: {{ (include "instance" . | fromYaml).limits | toYaml | nindent 16 }}
+            {{- if regexMatch "nvidia" .Values.instanceName }}
+            limits:
+              nvidia.com/gpu: {{ .Values.numGpus }}
+            {{- else if regexMatch "amd" .Values.instanceName }}
+            limits:
+              amd.com/gpu: {{ .Values.numGpus }}
+            {{- end }}
           env:
             - name: NUM_SHARD
               value: {{ .Values.numGpus | quote }}
@@ -34,7 +39,7 @@ spec:
           volumeMounts:
             - mountPath: /dev/shm
               name: dshm
-          {{- if eq (include "instance" . | fromYaml).provider "amd" }}
+          {{- if regexMatch "amd" .Values.instanceName }}
             - name: dev-kfd
               mountPath: /dev/kfd
             - name: dev-dri
@@ -44,9 +49,9 @@ spec:
         - name: dshm
           emptyDir:
             medium: Memory
-            {{- if eq (include "instance" . | fromYaml).provider "nvidia" }}
+            {{- if regexMatch "nvidia" .Values.instanceName }}
             sizeLimit: 1Gi
-            {{- else if eq (include "instance" . | fromYaml).provider "amd" }}
+            {{- else if regexMatch "amd" .Values.instanceName }}
             {{/* NOTE: this is an edge case reported by Dell */}}
             {{- if and (eq (.Values.modelId | lower ) "deepseek-ai/deepseek-r1-distill-llama-70b") (eq .Values.numGpus 4) }}
             sizeLimit: 512Gi
@@ -54,7 +59,7 @@ spec:
             sizeLimit: 256Gi
               {{- end }}
             {{- end }}
-        {{- if eq (include "instance" . | fromYaml).provider "amd" }}
+        {{- if regexMatch "amd" .Values.instanceName }}
         - name: dev-kfd
           hostPath:
             path: /dev/kfd

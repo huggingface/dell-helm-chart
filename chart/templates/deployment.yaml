@@ -28,9 +28,9 @@ spec:
             limits: {{ (include "instance" . | fromYaml).limits | toYaml | nindent 16 }}
           env:
             - name: NUM_SHARD
-              value: "{{ .Values.numGpus }}"
+              value: {{ .Values.numGpus | quote }}
             - name: PORT
-              value: "{{ .Values.port | default (int 80) }}"
+              value: {{ .Values.port | default (int 80) | quote }}
           volumeMounts:
             - mountPath: /dev/shm
               name: dshm

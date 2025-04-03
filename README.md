@@ -15,7 +15,7 @@
 To add the chart from the current repository you need to run:
 
 ```console
-$ helm repo add dell https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/chart
+$ helm repo add dell https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/charts/dell
 $ helm repo update dell
 ```
 
@@ -23,12 +23,12 @@ Then to install the chart on a Kubernetes cluster you can run the following:
 
 ```console
 $ helm install dell-tgi dell/dell \
-    --set name="tgi" \
-	--set instanceName="xe9680-nvidia-h100" \
-	--set numGpus=8 \
-	--set numReplicas=1 \
-	--set modelId="meta-llama/meta-llama-3-70b-instruct" \
-	--set port=80
+    --set appName="tgi" \
+    --set numReplicas=1 \
+    --set instanceName="xe9680-nvidia-h100" \
+    --set modelId="meta-llama/meta-llama-3-70b-instruct" \
+    --set env.PORT=80 \
+    --set env.NUM_SHARD=8
 ```
 
 Or run it with the default values that will deploy [`meta-llama/meta-llama-3-70b-instruct`](https://huggingface.co/meta-llama/meta-llama-3-70b-instruct)
@@ -36,4 +36,13 @@ on the instance `xe9680-nvidia-h100` with 8 x NVIDIA H100:
 
 ```console
 $ helm install dell-tgi dell/dell
+```
+
+## Testing the Chart
+
+To test that the template is generated as expected in advance, you can run the
+following command and play around with the different alternatives:
+
+```console
+$ helm template charts/dell
 ```

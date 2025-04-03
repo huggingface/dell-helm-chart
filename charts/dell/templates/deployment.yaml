@@ -12,7 +12,6 @@ spec:
       labels:
         app: {{ .Values.appName | default "tgi" }}
     spec:
-      nodeSelector: {{ .Values.instanceName | nindent 12 }}
       containers:
         - name: {{ .Values.instanceName }}
           {{- if regexMatch "nvidia" .Values.instanceName }}
@@ -55,9 +54,9 @@ spec:
             {{/* NOTE: this is an edge case reported by Dell */}}
             {{- if and (eq (.Values.modelId | lower ) "deepseek-ai/deepseek-r1-distill-llama-70b") (eq .Values.numGpus 4) }}
             sizeLimit: 512Gi
-              {{- else }}
+            {{- else }}
             sizeLimit: 256Gi
-              {{- end }}
+            {{- end }}
             {{- end }}
         {{- if regexMatch "amd" .Values.instanceName }}
         - name: dev-kfd
@@ -67,3 +66,6 @@ spec:
           hostPath:
             path: /dev/dri
         {{- end }}
+      nodeSelector:
+        {{/* TODO */}}
+        nvidia.com/gpu.product: NVIDIA-H100-80GB-HBM3

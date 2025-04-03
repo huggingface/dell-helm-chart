@@ -1,6 +1,6 @@
 {{- define "validateNumShard" -}}
 {{- $validShardValues := list 1 2 4 8 -}}
-{{- if has .Values.env.NUM_SHARD $validShardValues -}}
+{{- if has (int .Values.env.NUM_SHARD) $validShardValues -}}
   {{- true -}}
 {{- else -}}
   {{- fail "Invalid NUM_SHARD value. Must be one of: 1, 2, 4, 8" -}}
@@ -29,6 +29,3 @@
   {{- "" -}}
 {{- end -}}
 {{- end -}}
-
-{{- include "validateNumShard" . -}}
-{{- include "validateInstanceName" . -}}

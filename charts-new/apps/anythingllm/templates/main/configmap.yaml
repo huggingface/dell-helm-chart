@@ -1,0 +1,11 @@
+{{- if .Values.main.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "anythingllm.fullname" . }}-config
+  labels:
+    {{- include "anythingllm.labels" . | nindent 4 }}
+    app.kubernetes.io/component: main
+data:
+  MCP_SERVERS_CONFIG: {{ .Values.main.config.mcpServersConfig | quote }}
+{{- end }} 

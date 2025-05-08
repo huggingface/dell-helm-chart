@@ -1,0 +1,305 @@
+{
+    "$schema": "https://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "nameOverride": {
+            "type": "string"
+        },
+        "fullnameOverride": {
+            "type": "string"
+        },
+        "main": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Enable the main AnythingLLM component"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "repository": {
+                            "type": "string",
+                            "description": "Docker image repository"
+                        },
+                        "tag": {
+                            "type": "string",
+                            "description": "Docker image tag"
+                        },
+                        "pullPolicy": {
+                            "type": "string",
+                            "enum": [
+                                "Always",
+                                "Never",
+                                "IfNotPresent"
+                            ],
+                            "description": "Image pull policy"
+                        }
+                    }
+                },
+                "config": {
+                    "type": "object",
+                    "properties": {
+                        "storageClassName": {
+                            "type": "string",
+                            "description": "Storage class for the PVC"
+                        },
+                        "storageSize": {
+                            "type": "string",
+                            "description": "Size of the storage",
+                            "pattern": "^\\d+[MGT]i$"
+                        },
+                        "serverPort": {
+                            "type": "integer",
+                            "description": "Application server port"
+                        },
+                        "nodeEnv": {
+                            "type": "string",
+                            "description": "Node environment"
+                        },
+                        "storageDir": {
+                            "type": "string",
+                            "description": "Storage directory"
+                        },
+                        "llmProvider": {
+                            "type": "string",
+                            "description": "LLM provider"
+                        },
+                        "genericOpenAiBasePath": {
+                            "type": "string",
+                            "description": "Generic OpenAI base path"
+                        },
+                        "genericOpenAiModelPref": {
+                            "type": "string",
+                            "description": "Generic OpenAI model preference"
+                        },
+                        "genericOpenAiModelTokenLimit": {
+                            "type": "string",
+                            "description": "Generic OpenAI model token limit"
+                        },
+                        "vectorDb": {
+                            "type": "string",
+                            "description": "Vector database"
+                        },
+                        "mcpServersConfig": {
+                            "type": "string",
+                            "description": "MCP servers configuration"
+                        }
+                    },
+                    "required": [
+                        "storageClassName",
+                        "storageSize"
+                    ]
+                },
+                "secrets": {
+                    "type": "object",
+                    "properties": {
+                        "genericOpenAiApiKey": {
+                            "type": "string",
+                            "description": "API key for LLM"
+                        }
+                    }
+                },
+                "securityContext": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Enable security context"
+                        },
+                        "fsGroup": {
+                            "type": "integer",
+                            "description": "File system group ID"
+                        },
+                        "runAsUser": {
+                            "type": "integer",
+                            "description": "User ID to run as"
+                        },
+                        "runAsGroup": {
+                            "type": "integer",
+                            "description": "Group ID to run as"
+                        },
+                        "runAsNonRoot": {
+                            "type": "boolean",
+                            "description": "Run as non-root user"
+                        },
+                        "allowPrivilegeEscalation": {
+                            "type": "boolean",
+                            "description": "Allow privilege escalation"
+                        },
+                        "capabilities": {
+                            "type": "object",
+                            "properties": {
+                                "add": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    },
+                                    "description": "Capabilities to add"
+                                }
+                            }
+                        }
+                    }
+                },
+                "initContainer": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Enable init container"
+                        },
+                        "image": {
+                            "type": "object",
+                            "properties": {
+                                "repository": {
+                                    "type": "string",
+                                    "description": "Docker image repository"
+                                },
+                                "tag": {
+                                    "type": "string",
+                                    "description": "Docker image tag"
+                                },
+                                "pullPolicy": {
+                                    "type": "string",
+                                    "enum": [
+                                        "Always",
+                                        "Never",
+                                        "IfNotPresent"
+                                    ],
+                                    "description": "Image pull policy"
+                                }
+                            }
+                        }
+                    }
+                },
+                "service": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "enum": [
+                                "ClusterIP",
+                                "NodePort",
+                                "LoadBalancer"
+                            ],
+                            "description": "Service type"
+                        },
+                        "port": {
+                            "type": "integer",
+                            "description": "Service port"
+                        },
+                        "targetPort": {
+                            "type": "integer",
+                            "description": "Target port"
+                        }
+                    }
+                },
+                "probes": {
+                    "type": "object",
+                    "properties": {
+                        "readiness": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "description": "Enable readiness probe"
+                                },
+                                "path": {
+                                    "type": "string",
+                                    "description": "Readiness probe path"
+                                },
+                                "initialDelaySeconds": {
+                                    "type": "integer",
+                                    "description": "Initial delay seconds"
+                                },
+                                "periodSeconds": {
+                                    "type": "integer",
+                                    "description": "Period seconds"
+                                },
+                                "timeoutSeconds": {
+                                    "type": "integer",
+                                    "description": "Timeout seconds"
+                                }
+                            }
+                        },
+                        "liveness": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "description": "Enable liveness probe"
+                                },
+                                "path": {
+                                    "type": "string",
+                                    "description": "Liveness probe path"
+                                },
+                                "initialDelaySeconds": {
+                                    "type": "integer",
+                                    "description": "Initial delay seconds"
+                                },
+                                "periodSeconds": {
+                                    "type": "integer",
+                                    "description": "Period seconds"
+                                },
+                                "timeoutSeconds": {
+                                    "type": "integer",
+                                    "description": "Timeout seconds"
+                                }
+                            }
+                        }
+                    }
+                },
+                "resources": {
+                    "type": "object",
+                    "properties": {
+                        "requests": {
+                            "type": "object",
+                            "properties": {
+                                "cpu": {
+                                    "type": "string",
+                                    "description": "CPU request"
+                                },
+                                "memory": {
+                                    "type": "string",
+                                    "description": "Memory request"
+                                }
+                            }
+                        },
+                        "limits": {
+                            "type": "object",
+                            "properties": {
+                                "cpu": {
+                                    "type": "string",
+                                    "description": "CPU limit"
+                                },
+                                "memory": {
+                                    "type": "string",
+                                    "description": "Memory limit"
+                                }
+                            }
+                        }
+                    }
+                },
+                "persistence": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Enable persistence"
+                        },
+                        "size": {
+                            "type": "string",
+                            "description": "Storage size",
+                            "pattern": "^\\d+[MGT]i$"
+                        }
+                    }
+                }
+            },
+            "required": [
+                "enabled",
+                "image",
+                "config"
+            ]
+        }
+    }
+}

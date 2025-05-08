@@ -9,6 +9,7 @@ charts-new/
 ├── models/           # Charts for deploying LLM models
 ├── apps/             # Charts for deploying applications
 │   ├── openwebui/    # OpenWebUI chart
+│   ├── anythingllm/  # AnythingLLM chart
 │   └── ...           # Other application charts
 ```
 
@@ -23,6 +24,7 @@ Model deployment charts for large language models (LLMs) and other AI workloads.
 | Chart | Description | Version |
 |-------|-------------|---------|
 | [openwebui](./apps/openwebui) | OpenWebUI - A modern, feature-rich web UI for Ollama and LLMs | 0.1.0 |
+| [anythingllm](./apps/anythingllm) | AnythingLLM - Open-source, modular AI assistant with document management, memory, and chat capabilities | 0.1.0 |
 
 ## Usage
 

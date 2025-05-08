@@ -1,0 +1,19 @@
+{{- if .Values.main.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "anythingllm.fullname" . }}
+  labels:
+    {{- include "anythingllm.labels" . | nindent 4 }}
+    app.kubernetes.io/component: main
+spec:
+  type: {{ .Values.main.service.type }}
+  ports:
+  - port: {{ .Values.main.service.port }}
+    targetPort: {{ .Values.main.service.targetPort }}
+    protocol: TCP
+    name: http
+  selector:
+    {{- include "anythingllm.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: main
+{{- end }} 

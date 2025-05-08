@@ -1,0 +1,18 @@
+apiVersion: v2
+name: anythingllm
+description: AnythingLLM - Open-source, modular AI assistant with document management, memory, and chat capabilities
+type: application
+version: 0.1.0
+appVersion: "latest"
+maintainers:
+  - name: Dell
+home: https://github.com/Mintplex-Labs/anything-llm
+sources:
+  - https://github.com/Mintplex-Labs/anything-llm
+icon: https://raw.githubusercontent.com/Mintplex-Labs/anything-llm/master/frontend/public/android-chrome-192x192.png
+keywords:
+  - llm
+  - rag
+  - ai
+  - chatbot
+  - mcp 

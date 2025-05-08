@@ -1,0 +1,88 @@
+## Global settings
+nameOverride: ""
+fullnameOverride: ""
+
+## AnythingLLM Main Component Settings
+main:
+  enabled: true
+  image:
+    repository: mintplexlabs/anythingllm
+    tag: latest
+    pullPolicy: IfNotPresent
+  
+  # User configurable options from app spec
+  config:
+    storageClassName: "gp2"  # Required: Storage class for the PVC
+    storageSize: "10Gi"      # Required: Size of the storage
+    serverPort: 3001         # Application server port
+    nodeEnv: "production"    # Node environment
+    storageDir: "/app/server/storage"  # Storage directory
+    
+    # LLM Provider Configuration
+    llmProvider: "generic-openai"
+    genericOpenAiBasePath: ""
+    genericOpenAiModelPref: ""
+    genericOpenAiModelTokenLimit: "4096"
+    
+    # Vector Database Configuration
+    vectorDb: "lancedb"
+    
+    # MCP Servers Configuration
+    mcpServersConfig: |
+      {
+        "mcpServers": {}
+      }
+  
+  # User configurable secrets from app spec
+  secrets:
+    genericOpenAiApiKey: ""  # API key for LLM
+  
+  securityContext:
+    enabled: true
+    fsGroup: 1000
+    runAsUser: 1000
+    runAsGroup: 1000
+    runAsNonRoot: true
+    allowPrivilegeEscalation: true
+    capabilities:
+      add:
+        - SYS_ADMIN  # Required for web page scraping
+  
+  initContainer:
+    enabled: true
+    image: 
+      repository: busybox
+      tag: latest
+      pullPolicy: IfNotPresent
+  
+  service:
+    type: ClusterIP   # Can be ClusterIP, NodePort, or LoadBalancer
+    port: 80
+    targetPort: 3001
+
+  probes:
+    readiness:
+      enabled: true
+      path: /api/ping
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+    liveness:
+      enabled: true
+      path: /api/ping
+      initialDelaySeconds: 60
+      periodSeconds: 20
+      timeoutSeconds: 5
+
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+
+  persistence:
+    enabled: true
+    size: 10Gi
+    # storageClassName is set from config.storageClassName 

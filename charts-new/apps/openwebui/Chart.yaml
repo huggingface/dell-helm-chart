@@ -9,7 +9,7 @@ maintainers:
 home: https://github.com/open-webui/open-webui
 sources:
   - https://github.com/open-webui/open-webui
-icon: https://raw.githubusercontent.com/open-webui/open-webui/main/public/logo.png
+icon: https://avatars.githubusercontent.com/u/158137808?s=48&v=4
 keywords:
   - llm
   - ollama

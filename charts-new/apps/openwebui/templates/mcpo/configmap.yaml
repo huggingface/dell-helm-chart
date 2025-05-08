@@ -1,0 +1,11 @@
+{{- if and .Values.mcpo.enabled .Values.mcpo.config.serverConfig }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "openwebui.fullname" . }}-mcpo-config
+  labels:
+    {{- include "openwebui.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mcpo
+data:
+  config.json: {{ .Values.mcpo.config.serverConfig | toJson | quote }}
+{{- end }} 

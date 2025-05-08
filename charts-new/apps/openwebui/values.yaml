@@ -1,0 +1,62 @@
+## Global settings
+nameOverride: ""
+fullnameOverride: ""
+
+## OpenWebUI Main Component Settings
+main:
+  enabled: true
+  image:
+    repository: ghcr.io/open-webui/open-webui
+    tag: main
+    pullPolicy: IfNotPresent
+  
+  # User configurable options from app spec
+  config:
+    storageClassName: "gp2"  # Required: Storage class for the PVC
+    enableOpenAI: true       # Optional: Enable OpenAI-compatible API
+    openaiApiBaseUrls: ""    # Optional: OpenAI API base URLs (semicolon-separated)
+  
+  # User configurable secrets from app spec
+  secrets:
+    openaiApiKeys: ""        # Optional: OpenAI API keys (semicolon-separated)
+  
+  service:
+    type: ClusterIP
+    port: 8080
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  persistence:
+    enabled: true
+    size: 1Gi
+    # storageClassName is set from config.storageClassName
+
+## MCPO Component Settings
+mcpo:
+  enabled: false  # Optional component, disabled by default
+  image:
+    repository: ghcr.io/open-webui/mcpo
+    tag: main
+    pullPolicy: IfNotPresent
+  
+  # User configurable options from app spec
+  config:
+    serverConfig: {}  # JSON configuration for MCP servers
+  
+  service:
+    type: ClusterIP
+    port: 8000
+  
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi 

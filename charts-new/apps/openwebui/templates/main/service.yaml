@@ -1,0 +1,19 @@
+{{- if .Values.main.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "openwebui.fullname" . }}
+  labels:
+    {{- include "openwebui.labels" . | nindent 4 }}
+    app.kubernetes.io/component: main
+spec:
+  type: {{ .Values.main.service.type }}
+  ports:
+    - port: {{ .Values.main.service.port }}
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "openwebui.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: main
+{{- end }} 

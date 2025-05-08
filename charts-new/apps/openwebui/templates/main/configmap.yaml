@@ -1,0 +1,16 @@
+{{- if .Values.main.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "openwebui.fullname" . }}-config
+  labels:
+    {{- include "openwebui.labels" . | nindent 4 }}
+    app.kubernetes.io/component: main
+data:
+  # Main OpenAI-compatible API configuration
+  ENABLE_OPENAI_API: {{ .Values.main.config.enableOpenAI | quote }}
+  {{- if .Values.main.config.openaiApiBaseUrls }}
+  OPENAI_API_BASE_URLS: {{ .Values.main.config.openaiApiBaseUrls | quote }}
+  {{- end }}
+  ENABLE_OLLAMA_API: "false"  # Default to false, we're using OpenAI-compatible APIs
+{{- end }} 

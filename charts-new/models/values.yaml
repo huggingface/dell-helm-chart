@@ -1,0 +1,33 @@
+# nameOverride and fullnameOverride allow for custom naming
+nameOverride: ""
+fullnameOverride: ""
+
+# name defines the name of the application to be deployed, being the name shared
+# by the Deployment, Service and Ingress
+appName: tgi
+
+# instanceName defines the Dell instance in which the workload will run
+instanceName: xe9680-nvidia-h100
+
+# numReplicas defines the number of replicas for the deployment, but note that
+# you need to have access on Dell to as many instances as replicas you define
+numReplicas: 1
+
+# modelId defines the Hugging Face Hub model ID for the model (case insensitive)
+modelId: "meta-llama/meta-llama-3-70b-instruct"
+
+# env contains the environment variables for Text Generation Inference, you can
+# find them all at https://huggingface.co/docs/text-generation-inference/en/basic_tutorials/launcher
+env:
+  # PORT defines the Text Generation Inference (TGI) port to be exposed, as well
+  # as the port defined and exposed within the NGINX Ingress controller and the Service
+  PORT: 80
+
+  # NUM_SHARD defines the number of GPUs to use within each instance, but note that
+  # not all the instances support any arbitraty number of GPUs, even though those
+  # usually are within the 1-8 range (1, 2, 4, 8)
+  NUM_SHARD: 8
+
+  # NOTE: by default TGI will use the "best" configuration for the arguments as e.g.
+  # `MAX_TOTAL_TOKENS`, `MAX_INPUT_TOKENS`, etc. in order to stress out the existing
+  # resources and benefit from all the available VRAM 

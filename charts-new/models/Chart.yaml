@@ -1,0 +1,17 @@
+apiVersion: v2
+name: models
+description: Helm Chart for deploying open AI models from Dell Enterprise Hub
+type: application
+version: 0.1.0
+maintainers:
+  - name: huggingface
+  - name: alvarobartt
+  - name: andrewrreed
+home: https://huggingface.co/
+sources:
+  - https://github.com/huggingface/text-generation-inference
+keywords:
+  - llm
+  - ai
+  - text-generation
+  - text-generation-inference

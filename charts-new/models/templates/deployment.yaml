@@ -1,0 +1,79 @@
+{{- include "validateInstanceName" . }}
+{{- include "validateNumShard" . }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appName | default "tgi" }}
+  labels:
+    {{- include "models.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.numReplicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.appName | default "tgi" }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appName | default "tgi" }}
+        hf.co/model: {{ .Values.modelId | lower | replace "/" "-" }}
+        hf.co/task: text-generation
+        {{- include "models.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Values.instanceName }}
+          {{- if regexMatch "nvidia" .Values.instanceName }}
+          image: "registry.dell.huggingface.co/enterprise-dell-inference-{{ .Values.modelId | lower | replace "/" "-" }}:latest"
+          {{- else if regexMatch "amd" .Values.instanceName }}
+          image: "registry.dell.huggingface.co/enterprise-dell-inference-{{ .Values.modelId | lower | replace "/" "-" }}-amd:latest"
+          securityContext:
+            seccompProfile:
+              type: Unconfined
+          {{- end }}
+          resources:
+            {{- if regexMatch "nvidia" .Values.instanceName }}
+            limits:
+              nvidia.com/gpu: {{ .Values.env.NUM_SHARD | quote }}
+            {{- else if regexMatch "amd" .Values.instanceName }}
+            limits:
+              amd.com/gpu: {{ .Values.env.NUM_SHARD | quote }}
+            {{- end }}
+          env:
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          volumeMounts:
+            - mountPath: /dev/shm
+              name: dshm
+          {{- if regexMatch "amd" .Values.instanceName }}
+            - name: dev-kfd
+              mountPath: /dev/kfd
+            - name: dev-dri
+              mountPath: /dev/dri
+          {{- end }}
+      volumes:
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            {{- if regexMatch "nvidia" .Values.instanceName }}
+            sizeLimit: 1Gi
+            {{- else if regexMatch "amd" .Values.instanceName }}
+            {{/* NOTE: this is an edge case reported by Dell */}}
+            {{- if and (eq (.Values.modelId | lower ) "deepseek-ai/deepseek-r1-distill-llama-70b") (eq .Values.env.NUM_SHARD 4) }}
+            sizeLimit: 512Gi
+            {{- else }}
+            sizeLimit: 256Gi
+            {{- end }}
+            {{- end }}
+        {{- if regexMatch "amd" .Values.instanceName }}
+        - name: dev-kfd
+          hostPath:
+            path: /dev/kfd
+        - name: dev-dri
+          hostPath:
+            path: /dev/dri
+        {{- end }}
+      {{- if regexMatch "nvidia" .Values.instanceName }}
+      nodeSelector:
+        nvidia.com/gpu.product: {{ include "getNodeSelector" . | quote }}
+      {{- end }} 

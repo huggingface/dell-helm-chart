@@ -1,6 +1,6 @@
 # Models Helm Chart
 
-This Helm chart is used for deploying large language models (LLMs) on Dell hardware platforms.
+This Helm chart is used for deploying large language models (LLMs) on Dell hardware platforms from the Dell Enterprise Hub.
 
 ## Overview
 
@@ -67,9 +67,9 @@ helm install mistral ./charts-new/models \
 
 - The chart automatically validates that the `instanceName` is a supported Dell hardware type.
 - The `NUM_SHARD` value is validated to be one of: 1, 2, 4, or 8.
-- Different hardware platforms have different optimal configurations; consult Dell documentation for details.
+- Different hardware platforms have different optimal configurations; consult Dell Enterprise Hub for details.
 
 ## Additional Resources
 
+- [Dell Enterprise Hub](https://dell.huggingface.co/)
 - [Text Generation Inference Documentation](https://huggingface.co/docs/text-generation-inference)
-- [Dell Hardware Documentation](https://www.dell.com/support/) 

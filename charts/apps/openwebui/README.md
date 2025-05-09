@@ -15,9 +15,26 @@ OpenWebUI provides a user-friendly interface for interacting with various AI mod
 
 ## Installing the Chart
 
-To install the chart with the release name `my-openwebui`:
+### From the Helm Repository
 
 ```bash
+# Add the repository
+helm repo add deh https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/
+helm repo update
+
+# Install the chart
+helm install my-openwebui deh/apps/openwebui \
+  --set main.config.storageClassName=gp2
+```
+
+### From Local Source
+
+```bash
+# Clone the repository
+git clone https://github.com/huggingface/dell-helm-chart.git
+cd dell-helm-chart
+
+# Install the chart
 helm install my-openwebui ./charts/apps/openwebui \
   --set main.config.storageClassName=gp2
 ```
@@ -29,7 +46,7 @@ helm install my-openwebui ./charts/apps/openwebui \
 To enable the MCPO proxy component:
 
 ```bash
-helm install my-openwebui ./charts/apps/openwebui \
+helm install my-openwebui deh/apps/openwebui \
   --set main.config.storageClassName=gp2 \
   --set mcpo.enabled=true \
   --set mcpo.config.serverConfig='{"mcpServers":{"memory":{"command":"npx","args":["-y","@modelcontextprotocol/server-memory"]}}}'

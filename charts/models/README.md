@@ -15,8 +15,26 @@ The Models chart provides a standardized way to deploy Hugging Face's Text Gener
 
 ## Installing the Chart
 
+### From the Helm Repository
+
 ```bash
-helm install my-model-deployment ./charts-new/models --set modelId=meta-llama/llama-2-70b-chat
+# Add the repository
+helm repo add deh https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/
+helm repo update
+
+# Install the chart
+helm install my-model-deployment dell-hub/models --set modelId=meta-llama/llama-2-70b-chat
+```
+
+### From Local Source
+
+```bash
+# Clone the repository
+git clone https://github.com/huggingface/dell-helm-chart.git
+cd dell-helm-chart
+
+# Install the chart
+helm install my-model-deployment ./charts/models --set modelId=meta-llama/llama-2-70b-chat
 ```
 
 ## Configuration
@@ -46,7 +64,7 @@ helm install my-model-deployment ./charts-new/models --set modelId=meta-llama/ll
 ### Deploying a basic model
 
 ```bash
-helm install llama3 ./charts-new/models \
+helm install llama3 deh/models \
   --set modelId=meta-llama/meta-llama-3-70b-instruct \
   --set instanceName=xe9680-nvidia-h100 \
   --set env.NUM_SHARD=8 \
@@ -56,7 +74,7 @@ helm install llama3 ./charts-new/models \
 ### Deploying with different hardware
 
 ```bash
-helm install mistral ./charts-new/models \
+helm install mistral deh/models \
   --set modelId=mistralai/Mistral-7B-Instruct-v0.2 \
   --set instanceName=r760xa-nvidia-l40s \
   --set env.NUM_SHARD=2 \

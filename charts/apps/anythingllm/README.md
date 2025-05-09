@@ -5,7 +5,13 @@
 ## TL;DR
 
 ```bash
-helm install my-anythingllm ./charts-new/apps/anythingllm
+# From the Helm Repository
+helm repo add deh https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/
+helm repo update
+helm install my-anythingllm deh/apps/anythingllm
+
+# OR from local source
+helm install my-anythingllm ./charts/apps/anythingllm
 ```
 
 ## Introduction
@@ -20,10 +26,26 @@ This chart bootstraps an AnythingLLM deployment on a Kubernetes cluster using th
 
 ## Installing the Chart
 
-To install the chart with the release name `my-anythingllm`:
+### From the Helm Repository
 
 ```bash
-helm install my-anythingllm ./charts-new/apps/anythingllm
+# Add the repository
+helm repo add deh https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/
+helm repo update
+
+# Install the chart
+helm install my-anythingllm deh/apps/anythingllm
+```
+
+### From Local Source
+
+```bash
+# Clone the repository
+git clone https://github.com/huggingface/dell-helm-chart.git
+cd dell-helm-chart
+
+# Install the chart
+helm install my-anythingllm ./charts/apps/anythingllm
 ```
 
 The command deploys AnythingLLM on the Kubernetes cluster in the default configuration. The [Parameters](#parameters) section lists the parameters that can be configured during installation.
@@ -103,7 +125,7 @@ The command removes all the Kubernetes components associated with the chart and 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
 ```bash
-helm install my-anythingllm ./charts-new/apps/anythingllm \
+helm install my-anythingllm deh/apps/anythingllm \
   --set main.service.type=LoadBalancer
 ```
 
@@ -112,7 +134,7 @@ The above command sets the service type to LoadBalancer.
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
 ```bash
-helm install my-anythingllm ./charts-new/apps/anythingllm -f values.yaml
+helm install my-anythingllm deh/apps/anythingllm -f values.yaml
 ```
 
 > **Tip**: You can use the default [values.yaml](values.yaml)

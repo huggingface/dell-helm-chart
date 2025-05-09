@@ -19,11 +19,11 @@ The Models chart provides a standardized way to deploy Hugging Face's Text Gener
 
 ```bash
 # Add the repository
-helm repo add deh https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/
+helm repo add deh https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/.packaged-charts
 helm repo update
 
 # Install the chart
-helm install my-model-deployment dell-hub/models --set modelId=meta-llama/llama-2-70b-chat
+helm install my-model-deployment deh/models --set modelId=meta-llama/llama-3-70b-instruct
 ```
 
 ### From Local Source
@@ -34,7 +34,7 @@ git clone https://github.com/huggingface/dell-helm-chart.git
 cd dell-helm-chart
 
 # Install the chart
-helm install my-model-deployment ./charts/models --set modelId=meta-llama/llama-2-70b-chat
+helm install my-model-deployment ./charts/models --set modelId=meta-llama/llama-3-70b-instruct
 ```
 
 ## Configuration

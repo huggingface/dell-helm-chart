@@ -33,6 +33,35 @@ Application charts for deploying AI-powered applications:
 
 ## Installation
 
+### From the Helm Repository
+
+```bash
+# Add the repository
+helm repo add deh https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/.packaged-charts
+helm repo update
+
+# Install charts
+helm install llama3 deh/models
+helm install openwebui deh/openwebui
+helm install anythingllm deh/anythingllm
+```
+
+### From Local Source
+
+For development or testing purposes, you can install charts directly from a local clone of this repository:
+
+```bash
+# Clone the repository
+git clone https://github.com/huggingface/dell-helm-chart.git
+cd dell-helm-chart
+
+# Install a model chart
+helm install llama3 ./charts/models
+
+# Install an application chart
+helm install openwebui ./charts/apps/openwebui
+```
+
 For detailed installation instructions for each chart, please refer to their respective README files:
 
 - [Models Chart Documentation](./models/README.md)

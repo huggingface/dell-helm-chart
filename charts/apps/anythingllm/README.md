@@ -6,9 +6,9 @@
 
 ```bash
 # From the Helm Repository
-helm repo add deh https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/
+helm repo add deh https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/.packaged-charts
 helm repo update
-helm install my-anythingllm deh/apps/anythingllm
+helm install my-anythingllm deh/anythingllm
 
 # OR from local source
 helm install my-anythingllm ./charts/apps/anythingllm
@@ -30,11 +30,11 @@ This chart bootstraps an AnythingLLM deployment on a Kubernetes cluster using th
 
 ```bash
 # Add the repository
-helm repo add deh https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/
+helm repo add deh https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/.packaged-charts
 helm repo update
 
 # Install the chart
-helm install my-anythingllm deh/apps/anythingllm
+helm install my-anythingllm deh/anythingllm
 ```
 
 ### From Local Source
@@ -125,7 +125,7 @@ The command removes all the Kubernetes components associated with the chart and 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
 ```bash
-helm install my-anythingllm deh/apps/anythingllm \
+helm install my-anythingllm deh/anythingllm \
   --set main.service.type=LoadBalancer
 ```
 
@@ -134,7 +134,7 @@ The above command sets the service type to LoadBalancer.
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
 ```bash
-helm install my-anythingllm deh/apps/anythingllm -f values.yaml
+helm install my-anythingllm deh/anythingllm -f values.yaml
 ```
 
 > **Tip**: You can use the default [values.yaml](values.yaml)

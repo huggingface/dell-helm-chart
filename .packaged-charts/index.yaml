@@ -1,0 +1,72 @@
+apiVersion: v1
+entries:
+  anythingllm:
+  - apiVersion: v2
+    appVersion: latest
+    created: "2025-05-09T09:05:40.537461-04:00"
+    description: AnythingLLM - Open-source, modular AI assistant with document management,
+      memory, and chat capabilities
+    digest: 76823ebe2411e8f7ea752461e6fd21a0f601735819f185721281515860563a2f
+    home: https://github.com/Mintplex-Labs/anything-llm
+    icon: https://avatars.githubusercontent.com/u/134426827?s=48&v=4
+    keywords:
+    - llm
+    - rag
+    - ai
+    - chatbot
+    - mcp
+    maintainers:
+    - name: Dell
+    name: anythingllm
+    sources:
+    - https://github.com/Mintplex-Labs/anything-llm
+    type: application
+    urls:
+    - https://raw.githubusercontent.com/huggingface/dell-helm-chart/add-apps/.packaged-charts/anythingllm-0.1.0.tgz
+    version: 0.1.0
+  models:
+  - apiVersion: v2
+    created: "2025-05-09T09:05:40.537674-04:00"
+    description: Helm Chart for deploying open AI models from Dell Enterprise Hub
+    digest: 313630345c83281f2d371ec5d4f11663cb729645db3204bfbed53ed44e0e1c4d
+    home: https://huggingface.co/
+    keywords:
+    - llm
+    - ai
+    - text-generation
+    - text-generation-inference
+    maintainers:
+    - name: huggingface
+    - name: alvarobartt
+    - name: andrewrreed
+    name: models
+    sources:
+    - https://github.com/huggingface/text-generation-inference
+    type: application
+    urls:
+    - https://raw.githubusercontent.com/huggingface/dell-helm-chart/add-apps/.packaged-charts/models-0.1.0.tgz
+    version: 0.1.0
+  openwebui:
+  - apiVersion: v2
+    appVersion: latest
+    created: "2025-05-09T09:05:40.537967-04:00"
+    description: OpenWebUI - A modern, feature-rich web UI for Ollama and LLMs
+    digest: cb9c4e7658eabb4031fadbf631a69ef219c161f93e55703d3fa009a562ca8e07
+    home: https://github.com/open-webui/open-webui
+    icon: https://avatars.githubusercontent.com/u/158137808?s=48&v=4
+    keywords:
+    - llm
+    - ollama
+    - openai
+    - webui
+    - mcp
+    maintainers:
+    - name: Dell
+    name: openwebui
+    sources:
+    - https://github.com/open-webui/open-webui
+    type: application
+    urls:
+    - https://raw.githubusercontent.com/huggingface/dell-helm-chart/add-apps/.packaged-charts/openwebui-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-05-09T09:05:40.536602-04:00"

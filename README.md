@@ -14,12 +14,13 @@
 This repository contains Helm charts for deploying both AI models and applications on Dell hardware:
 
 ```
-charts/
-├── models/          # Charts for deploying LLM models
-│   └── templates/   # Templates for model deployments
-├── apps/            # Charts for deploying applications
-│   ├── anythingllm/ # AnythingLLM application chart
-│   └── openwebui/   # OpenWebUI application chart
+charts/               # Source code for the Helm charts
+├── models/           # Charts for deploying LLM models
+│   └── templates/    # Templates for model deployments
+├── apps/             # Charts for deploying applications
+│   ├── anythingllm/  # AnythingLLM application chart
+│   └── openwebui/    # OpenWebUI application chart
+.packaged-charts/     # Packaged chart files (.tgz) and index.yaml
 ```
 
 ## Available Charts
@@ -46,7 +47,7 @@ Application charts for deploying AI-powered applications:
 To add the chart repository:
 
 ```console
-$ helm repo add deh https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/
+$ helm repo add deh https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/.packaged-charts
 $ helm repo update
 ```
 
@@ -73,7 +74,7 @@ $ helm install llama3 deh/models
 Deploy an application:
 
 ```console
-$ helm install my-app deh/apps/anythingllm \
+$ helm install my-app deh/anythingllm \
     --set main.config.storageClassName="gp2" \
     --set main.config.storageSize="10Gi"
 ```
@@ -119,3 +120,65 @@ Each chart includes its own README with specific installation and configuration 
 - [Models Chart Documentation](./charts/models/README.md)
 - [AnythingLLM Chart Documentation](./charts/apps/anythingllm/README.md)
 - [OpenWebUI Chart Documentation](./charts/apps/openwebui/README.md)
+
+## Helm Repository Maintenance
+
+This section provides guidance for maintainers on how to update the Helm chart repository.
+
+### Repository Structure
+
+This repository follows the Helm chart repository best practices:
+
+1. Chart source code is stored in the `charts/` directory
+2. Packaged charts and index.yaml are stored in the `.packaged-charts/` directory
+
+### Adding or Updating Charts
+
+When making changes to existing charts or adding new charts, follow these steps:
+
+1. Make changes to the chart source code in the `charts/` directory
+2. Update the chart version in the respective `Chart.yaml` file
+3. Package the updated chart:
+
+```console
+# For updating a single chart (e.g., anythingllm)
+$ helm package charts/apps/anythingllm -d .packaged-charts
+
+# For updating all charts
+$ helm package charts/apps/anythingllm -d .packaged-charts
+$ helm package charts/apps/openwebui -d .packaged-charts
+$ helm package charts/models -d .packaged-charts
+```
+
+4. Regenerate the index.yaml file:
+
+```console
+$ helm repo index .packaged-charts --url https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/.packaged-charts
+```
+
+5. Commit and push the changes:
+
+```console
+$ git add charts/ .packaged-charts/
+$ git commit -m "Update charts and packages"
+$ git push
+```
+
+### Testing Before Release
+
+Before pushing changes, always test your charts locally:
+
+```console
+# Lint the charts to check for issues
+$ helm lint charts/models
+$ helm lint charts/apps/anythingllm
+$ helm lint charts/apps/openwebui
+
+# Test template rendering
+$ helm template charts/models
+$ helm template charts/apps/anythingllm
+$ helm template charts/apps/openwebui
+
+# Optional: Test installation in a development cluster
+$ helm install test-model ./charts/models --dry-run
+```

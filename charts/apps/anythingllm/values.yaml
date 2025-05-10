@@ -7,7 +7,7 @@ main:
   enabled: true
   image:
     repository: mintplexlabs/anythingllm
-    tag: latest
+    tag: v1.8.1
     pullPolicy: IfNotPresent
   
   # User configurable options from app spec

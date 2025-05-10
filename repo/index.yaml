@@ -3,10 +3,10 @@ entries:
   anythingllm:
   - apiVersion: v2
     appVersion: latest
-    created: "2025-05-10T13:38:29.313823-04:00"
+    created: "2025-05-10T14:01:18.400063-04:00"
     description: AnythingLLM - Open-source, modular AI assistant with document management,
       memory, and chat capabilities
-    digest: ba604c49f3702e5b0f00272bc322634d6633cbdb6a30ce7021ba395141dbf058
+    digest: 6396345036f18240ce365676470ac0e4616a4eee3f33f5adf9946bd2f697f0c9
     home: https://github.com/Mintplex-Labs/anything-llm
     icon: https://avatars.githubusercontent.com/u/134426827?s=48&v=4
     keywords:
@@ -26,9 +26,9 @@ entries:
     version: 0.0.1
   models:
   - apiVersion: v2
-    created: "2025-05-10T13:38:29.314058-04:00"
+    created: "2025-05-10T14:01:18.400288-04:00"
     description: Helm Chart for deploying open AI models from Dell Enterprise Hub
-    digest: 861b20cdbb3eb270958730ac67c6c4143d768c2e7fc57e3107b5da1d016a0486
+    digest: 053e785fbab600791ae6fc1711f207c978d257e107d1a69c19718709f4a07e7c
     home: https://huggingface.co/
     keywords:
     - llm
@@ -49,9 +49,9 @@ entries:
   openwebui:
   - apiVersion: v2
     appVersion: latest
-    created: "2025-05-10T13:38:29.314399-04:00"
+    created: "2025-05-10T14:01:18.400622-04:00"
     description: OpenWebUI - A modern, feature-rich web UI for Ollama and LLMs
-    digest: 32611b90a19c5fc745bfdcdac10f66fc40a3386d45100998a5a0d862ddd6fa7a
+    digest: 828211baca561670f46fd5e0cf0305010e0296c852217d65895055a7cdf1cac5
     home: https://github.com/open-webui/open-webui
     icon: https://avatars.githubusercontent.com/u/158137808?s=48&v=4
     keywords:
@@ -69,4 +69,4 @@ entries:
     urls:
     - https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/repo/openwebui-0.0.1.tgz
     version: 0.0.1
-generated: "2025-05-10T13:38:29.313061-04:00"
+generated: "2025-05-10T14:01:18.399644-04:00"

@@ -7,7 +7,7 @@ main:
   enabled: true
   image:
     repository: ghcr.io/open-webui/open-webui
-    tag: main
+    tag: v0.6.8
     pullPolicy: IfNotPresent
   
   # User configurable options from app spec
@@ -42,7 +42,7 @@ mcpo:
   enabled: false  # Optional component, disabled by default
   image:
     repository: ghcr.io/open-webui/mcpo
-    tag: main
+    tag: v0.0.13
     pullPolicy: IfNotPresent
   
   # User configurable options from app spec

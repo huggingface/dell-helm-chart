@@ -132,6 +132,15 @@ This repository follows the Helm chart repository best practices:
 1. Chart source code is stored in the `charts/` directory
 2. Packaged charts and index.yaml are stored in the `repo/` directory
 
+### Chart Versioning
+
+We follow these versioning guidelines for our Helm charts:
+
+1. **Chart Versioning**: Charts follow SemVer (major.minor.patch) starting at v0.0.1 for development
+2. **Docker Image Versioning**: Each chart specifies pinned image versions for stability
+
+When updating to new application versions, we create a new chart version to reflect these changes.
+
 ### Adding or Updating Charts
 
 When making changes to existing charts or adding new charts, follow these steps:

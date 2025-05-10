@@ -20,7 +20,7 @@ charts/               # Source code for the Helm charts
 ├── apps/             # Charts for deploying applications
 │   ├── anythingllm/  # AnythingLLM application chart
 │   └── openwebui/    # OpenWebUI application chart
-.packaged-charts/     # Packaged chart files (.tgz) and index.yaml
+repo/                 # Packaged chart files (.tgz) and index.yaml
 ```
 
 ## Available Charts
@@ -47,7 +47,7 @@ Application charts for deploying AI-powered applications:
 To add the chart repository:
 
 ```console
-$ helm repo add deh https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/.packaged-charts
+$ helm repo add deh https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/repo
 $ helm repo update
 ```
 
@@ -130,7 +130,7 @@ This section provides guidance for maintainers on how to update the Helm chart r
 This repository follows the Helm chart repository best practices:
 
 1. Chart source code is stored in the `charts/` directory
-2. Packaged charts and index.yaml are stored in the `.packaged-charts/` directory
+2. Packaged charts and index.yaml are stored in the `repo/` directory
 
 ### Adding or Updating Charts
 
@@ -142,24 +142,24 @@ When making changes to existing charts or adding new charts, follow these steps:
 
 ```console
 # For updating a single chart (e.g., anythingllm)
-$ helm package charts/apps/anythingllm -d .packaged-charts
+$ helm package charts/apps/anythingllm -d repo
 
 # For updating all charts
-$ helm package charts/apps/anythingllm -d .packaged-charts
-$ helm package charts/apps/openwebui -d .packaged-charts
-$ helm package charts/models -d .packaged-charts
+$ helm package charts/apps/anythingllm -d repo
+$ helm package charts/apps/openwebui -d repo
+$ helm package charts/models -d repo
 ```
 
 4. Regenerate the index.yaml file:
 
 ```console
-$ helm repo index .packaged-charts --url https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/.packaged-charts
+$ helm repo index repo --url https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/repo
 ```
 
 5. Commit and push the changes:
 
 ```console
-$ git add charts/ .packaged-charts/
+$ git add charts/ repo/
 $ git commit -m "Update charts and packages"
 $ git push
 ```

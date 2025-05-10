@@ -37,7 +37,7 @@ Application charts for deploying AI-powered applications:
 
 ```bash
 # Add the repository
-helm repo add deh https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/.packaged-charts
+helm repo add deh https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/repo
 helm repo update
 
 # Install charts

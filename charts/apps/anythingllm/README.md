@@ -6,7 +6,7 @@
 
 ```bash
 # From the Helm Repository
-helm repo add deh https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/.packaged-charts
+helm repo add deh https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/repo
 helm repo update
 helm install my-anythingllm deh/anythingllm
 
@@ -30,7 +30,7 @@ This chart bootstraps an AnythingLLM deployment on a Kubernetes cluster using th
 
 ```bash
 # Add the repository
-helm repo add deh https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/.packaged-charts
+helm repo add deh https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/repo
 helm repo update
 
 # Install the chart

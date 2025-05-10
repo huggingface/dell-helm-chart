@@ -161,25 +161,31 @@ main:
 
 ### MCP Servers Configuration
 
-AnythingLLM supports Model Control Protocol (MCP) servers for various plugins and extensions. You can configure them with:
+AnythingLLM supports Model Control Protocol (MCP) servers for various plugins and extensions. The `mcpServersConfig` parameter is of type object and needs to be properly formatted as JSON. For complex JSON objects, use the `--set-json` parameter when installing the chart:
+
+```bash
+# Using --set-json for MCP servers configuration
+helm install my-anythingllm deh/anythingllm \
+  --set-json 'main.config.mcpServersConfig={"mcpServers":{"fetch":{"command":"uvx","args":["mcp-server-fetch"],"anythingllm":{"autoStart":true}},"mcp-youtube":{"command":"uvx","args":["mcp-youtube"]}}}'
+```
+
+When using values.yaml, you can define it as an object:
 
 ```yaml
 main:
   config:
-    mcpServersConfig: |
-      {
-        "mcpServers": {
-          "fetch": {
-            "command": "uvx",
-            "args": [
-                "mcp-server-fetch"
-            ],
-            "anythingllm": {
-                "autoStart": true
-            }
-          }
-        }
-      }
+    mcpServersConfig:
+      mcpServers:
+        fetch:
+          command: "uvx"
+          args:
+            - "mcp-server-fetch"
+          anythingllm:
+            autoStart: true
+        mcp-youtube:
+          command: "uvx"
+          args:
+            - "mcp-youtube"
 ```
 
 ### Security Context

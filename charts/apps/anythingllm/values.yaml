@@ -28,10 +28,7 @@ main:
     vectorDb: "lancedb"
     
     # MCP Servers Configuration
-    mcpServersConfig: |
-      {
-        "mcpServers": {}
-      }
+    mcpServersConfig: {}
   
   # User configurable secrets from app spec
   secrets:

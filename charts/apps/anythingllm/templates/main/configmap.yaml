@@ -7,5 +7,5 @@ metadata:
     {{- include "anythingllm.labels" . | nindent 4 }}
     app.kubernetes.io/component: main
 data:
-  MCP_SERVERS_CONFIG: {{ .Values.main.config.mcpServersConfig | quote }}
+  MCP_SERVERS_CONFIG: {{ .Values.main.config.mcpServersConfig | toJson | quote }}
 {{- end }} 

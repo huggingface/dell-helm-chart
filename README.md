@@ -79,6 +79,14 @@ $ helm install my-app deh/anythingllm \
     --set main.config.storageSize="10Gi"
 ```
 
+For complex MCP configurations, use the `--set-json` parameter:
+
+```console
+$ helm install my-app deh/anythingllm \
+    --set main.config.storageClassName="gp2" \
+    --set-json 'main.config.mcpServersConfig={"mcpServers":{"fetch":{"command":"uvx","args":["mcp-server-fetch"],"anythingllm":{"autoStart":true}}}}'
+```
+
 ## Installing Charts Locally
 
 For development or testing purposes, you can install charts directly from a local clone of this repository:
@@ -106,6 +114,24 @@ $ helm template ./charts/models
 # Test an application chart
 $ helm template ./charts/apps/anythingllm
 ```
+
+## Advanced Usage
+
+### Complex JSON Configurations
+
+When deploying charts with complex configurations that involve nested JSON objects, use the `--set-json` parameter instead of `--set`. This ensures proper formatting and parsing of JSON data:
+
+```console
+# Incorrect - may lead to parsing errors
+$ helm install anythingllm ./charts/apps/anythingllm \
+    --set main.config.mcpServersConfig={"mcpServers":{"fetch":{"command":"uvx"}}}
+
+# Correct - use --set-json for complex JSON data
+$ helm install anythingllm ./charts/apps/anythingllm \
+    --set-json 'main.config.mcpServersConfig={"mcpServers":{"fetch":{"command":"uvx","args":["mcp-server-fetch"]}}}'
+```
+
+This is particularly important for charts like AnythingLLM and OpenWebUI that use MCP server configurations.
 
 ## Requirements
 

@@ -49,7 +49,37 @@ To enable the MCPO proxy component:
 helm install my-openwebui deh/openwebui \
   --set main.config.storageClassName=gp2 \
   --set mcpo.enabled=true \
-  --set mcpo.config.serverConfig='{"mcpServers":{"memory":{"command":"npx","args":["-y","@modelcontextprotocol/server-memory"]}}}'
+  --set-json 'mcpo.config.serverConfig={"mcpServers":{"memory":{"command":"npx","args":["-y","@modelcontextprotocol/server-memory"]}}}'
+```
+
+For complex JSON configurations, always use the `--set-json` parameter rather than `--set` to ensure proper JSON formatting:
+
+```bash
+# Using --set-json for complex MCPO server configuration
+helm install my-openwebui deh/openwebui \
+  --set main.config.storageClassName=gp2 \
+  --set mcpo.enabled=true \
+  --set-json 'mcpo.config.serverConfig={"mcpServers":{"memory":{"command":"npx","args":["-y","@modelcontextprotocol/server-memory"]},"search":{"command":"npx","args":["-y","@modelcontextprotocol/server-search"]}}}'
+```
+
+When using values.yaml, you can specify it as an object:
+
+```yaml
+mcpo:
+  enabled: true
+  config:
+    serverConfig:
+      mcpServers:
+        memory:
+          command: "npx"
+          args: 
+            - "-y"
+            - "@modelcontextprotocol/server-memory"
+        search:
+          command: "npx"
+          args:
+            - "-y"
+            - "@modelcontextprotocol/server-search"
 ```
 
 ## Configuration

@@ -82,7 +82,7 @@
                             "description": "Vector database"
                         },
                         "mcpServersConfig": {
-                            "type": "string",
+                            "type": "object",
                             "description": "MCP servers configuration"
                         }
                     },

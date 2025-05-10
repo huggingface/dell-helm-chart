@@ -2,7 +2,7 @@ apiVersion: v2
 name: openwebui
 description: OpenWebUI - A modern, feature-rich web UI for Ollama and LLMs
 type: application
-version: 0.1.0
+version: 0.0.1
 appVersion: "latest"
 maintainers:
   - name: Dell

@@ -37,8 +37,8 @@ Application charts for deploying AI-powered applications:
 
 | Chart | Description | Version |
 |-------|-------------|---------|
-| **openwebui** | Modern, feature-rich web UI for Ollama and LLMs | 0.1.0 |
-| **anythingllm** | Open-source AI assistant with document management, memory, and chat capabilities | 0.1.0 |
+| **openwebui** | Modern, feature-rich web UI for Ollama and LLMs | 0.0.1 |
+| **anythingllm** | Open-source AI assistant with document management, memory, and chat capabilities | 0.0.1 |
 
 ## Installing Charts from the Repository
 

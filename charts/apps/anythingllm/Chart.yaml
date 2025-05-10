@@ -2,7 +2,7 @@ apiVersion: v2
 name: anythingllm
 description: AnythingLLM - Open-source, modular AI assistant with document management, memory, and chat capabilities
 type: application
-version: 0.1.0
+version: 0.0.1
 appVersion: "latest"
 maintainers:
   - name: Dell

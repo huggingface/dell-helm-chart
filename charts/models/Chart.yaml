@@ -2,7 +2,7 @@ apiVersion: v2
 name: models
 description: Helm Chart for deploying open AI models from Dell Enterprise Hub
 type: application
-version: 0.1.0
+version: 0.0.1
 maintainers:
   - name: huggingface
   - name: alvarobartt

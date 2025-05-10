@@ -3,6 +3,8 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ include "anythingllm.fullname" . }}-pvc
+  annotations:
+    "helm.sh/resource-policy": keep
   labels:
     {{- include "anythingllm.labels" . | nindent 4 }}
     app.kubernetes.io/component: main

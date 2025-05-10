@@ -43,6 +43,8 @@ helm install my-openwebui ./charts/apps/openwebui \
 
 ### Optional MCPO Component
 
+The Model Context Protocol (MCP) component provides tool functionality to enable advanced features like web browsing, time functions, and external API access. **Note that the MCPO component is disabled by default** and must be explicitly enabled with `--set mcpo.enabled=true`.
+
 To enable the MCPO proxy component:
 
 ```bash
@@ -55,18 +57,18 @@ helm install my-openwebui deh/openwebui \
 For complex JSON configurations, always use the `--set-json` parameter rather than `--set` to ensure proper JSON formatting:
 
 ```bash
-# Using --set-json for complex MCPO server configuration
+# Using --set-json for complex MCPO server configuration with multiple servers
 helm install my-openwebui deh/openwebui \
   --set main.config.storageClassName=gp2 \
   --set mcpo.enabled=true \
-  --set-json 'mcpo.config.serverConfig={"mcpServers":{"memory":{"command":"npx","args":["-y","@modelcontextprotocol/server-memory"]},"search":{"command":"npx","args":["-y","@modelcontextprotocol/server-search"]}}}'
+  --set-json 'mcpo.config.serverConfig={"mcpServers":{"fetch":{"command":"uvx","args":["mcp-server-fetch"]},"airbnb":{"command":"npx","args":["-y","@openbnb/mcp-server-airbnb","--ignore-robots-txt"]},"time":{"command":"uvx","args":["mcp-server-time","--local-timezone=America/New_York"]},"gradio":{"url":"https://abidlabs-mcp-tools.hf.space/gradio_api/mcp/sse"}}}'
 ```
 
 When using values.yaml, you can specify it as an object:
 
 ```yaml
 mcpo:
-  enabled: true
+  enabled: true  # Must be set to true to enable MCPO
   config:
     serverConfig:
       mcpServers:

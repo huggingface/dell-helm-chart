@@ -92,6 +92,8 @@ spec:
           value: "{{ .Values.main.config.storageDir }}"
         - name: LLM_PROVIDER
           value: "{{ .Values.main.config.llmProvider }}"
+        - name: JWT_SECRET
+          value: "{{ .Values.main.config.jwtSecret | default (randAlphaNum 32) }}"
         {{- if .Values.main.config.genericOpenAiBasePath }}
         - name: GENERIC_OPEN_AI_BASE_PATH
           value: "{{ .Values.main.config.genericOpenAiBasePath }}"

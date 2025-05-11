@@ -89,6 +89,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `main.config.genericOpenAiModelPref` | Generic OpenAI model preference                                        | `""`                    |
 | `main.config.genericOpenAiModelTokenLimit` | Generic OpenAI model token limit                                 | `4096`                  |
 | `main.config.vectorDb`         | Vector database                                                              | `lancedb`               |
+| `main.config.jwtSecret`        | Secret for JWT tokens (auto-generated if not provided)                       | `""`                    |
 | `main.config.mcpServersConfig` | MCP servers configuration                                                    | See `values.yaml`       |
 | `main.secrets.genericOpenAiApiKey` | API key for LLM                                                         | `""`                    |
 | `main.securityContext.enabled` | Enable security context                                                      | `true`                  |
@@ -158,6 +159,18 @@ main:
   secrets:
     genericOpenAiApiKey: "your-api-key"
 ```
+
+### Authentication
+
+AnythingLLM supports multi-user mode which requires a JWT_SECRET to be set for token generation. This Helm chart automatically generates a random JWT secret if one is not provided. You can explicitly set your own JWT secret via:
+
+```yaml
+main:
+  config:
+    jwtSecret: "your-secure-random-string"
+```
+
+If you're using multi-user mode, you'll create an admin user through the UI when first accessing AnythingLLM.
 
 ### MCP Servers Configuration
 

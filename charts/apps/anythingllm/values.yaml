@@ -27,6 +27,9 @@ main:
     # Vector Database Configuration
     vectorDb: "lancedb"
     
+    # Authentication Configuration
+    jwtSecret: ""  # Secret for JWT tokens (auto-generated if not provided)
+    
     # MCP Servers Configuration
     mcpServersConfig: {}
   

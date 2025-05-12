@@ -1,5 +1,3 @@
-Thank you for installing {{ .Chart.Name }} {{ .Chart.Version }}.
-
 {{- if .Values.main.enabled }}
 Your AnythingLLM instance has been deployed!
 

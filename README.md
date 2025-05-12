@@ -2,7 +2,7 @@
 
 > Helm Charts for deploying open AI models and applications from Dell Enterpise Hub (DEH) on Dell platforms
 
-![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square)
+![Version: 0.0.2](https://img.shields.io/badge/Version-0.0.2-informational?style=flat-square)
 ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 > [!WARNING]
@@ -36,8 +36,8 @@ Application charts for deploying AI-powered applications:
 
 | Chart | Description | Version |
 |-------|-------------|---------|
-| **openwebui** | Modern, feature-rich web UI for Ollama and LLMs | 0.0.1 |
-| **anythingllm** | Open-source AI assistant with document management, memory, and chat capabilities | 0.0.1 |
+| **openwebui** | Modern, feature-rich web UI for Ollama and LLMs | 0.0.2 |
+| **anythingllm** | Open-source AI assistant with document management, memory, and chat capabilities | 0.0.2 |
 
 ## Installing Charts from the Repository
 

@@ -19,7 +19,7 @@ The Models chart provides a standardized way to deploy Hugging Face's Text Gener
 
 ```bash
 # Add the repository
-helm repo add deh https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/repo
+helm repo add deh https://huggingface.github.io/dell-helm-chart
 helm repo update
 
 # Install the chart

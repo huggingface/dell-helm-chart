@@ -45,7 +45,7 @@ entries:
     - https://github.com/Mintplex-Labs/anything-llm
     type: application
     urls:
-    - anythingllm-0.0.1.tgz
+    - https://github.com/huggingface/dell-helm-chart/releases/download/anythingllm-0.0.1/anythingllm-0.0.1.tgz
     version: 0.0.1
   models:
   - apiVersion: v2
@@ -133,6 +133,6 @@ entries:
     - https://github.com/open-webui/open-webui
     type: application
     urls:
-    - openwebui-0.0.1.tgz
+    - https://github.com/huggingface/dell-helm-chart/releases/download/openwebui-0.0.1/openwebui-0.0.1.tgz
     version: 0.0.1
 generated: "2025-05-12T19:20:57.630939859Z"

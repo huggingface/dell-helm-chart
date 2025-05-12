@@ -23,8 +23,12 @@ jobs:
 
       - name: Install Helm
         uses: azure/setup-helm@v3
+        with:
+          version: 'v3.9.0'  # Specify a fixed version instead of 'latest'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Package App Charts
+      - name: Package Charts
         run: |
           # Create temp directory for packaged charts
           mkdir -p .cr-release-packages
@@ -47,7 +51,6 @@ jobs:
         uses: helm/chart-releaser-action@v1.7.0
         with:
           charts_dir: charts
-          packages_with_index: true
           skip_packaging: true
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}" 

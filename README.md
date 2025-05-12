@@ -1,12 +1,12 @@
 # Helm Chart for the Dell Enterprise Hub
 
-> Helm Charts for deploying open-source AI models and applications from Dell Enterpise Hub (DEH) on Dell platforms
+> Helm Charts for deploying open AI models and applications from Dell Enterpise Hub (DEH) on Dell platforms
 
 ![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square)
 ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 > [!WARNING]
-> These Helm Charts are intended to be used within the Dell Enterprise Hub on Dell instances,
+> These Helm Charts are intended to be used with the Dell Enterprise Hub on Dell instances,
 > and are subject to changes!
 
 ## Repository Structure

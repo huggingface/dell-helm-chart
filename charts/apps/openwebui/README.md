@@ -19,7 +19,7 @@ OpenWebUI provides a user-friendly interface for interacting with various AI mod
 
 ```bash
 # Add the repository
-helm repo add deh https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/repo
+helm repo add deh https://huggingface.github.io/dell-helm-chart
 helm repo update
 
 # Install the chart

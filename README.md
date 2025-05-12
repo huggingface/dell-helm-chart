@@ -20,7 +20,6 @@ charts/               # Source code for the Helm charts
 ├── apps/             # Charts for deploying applications
 │   ├── anythingllm/  # AnythingLLM application chart
 │   └── openwebui/    # OpenWebUI application chart
-repo/                 # Packaged chart files (.tgz) and index.yaml
 ```
 
 ## Available Charts
@@ -47,7 +46,7 @@ Application charts for deploying AI-powered applications:
 To add the chart repository:
 
 ```console
-$ helm repo add deh https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/repo
+$ helm repo add deh https://huggingface.github.io/dell-helm-chart
 $ helm repo update
 ```
 
@@ -156,7 +155,11 @@ This section provides guidance for maintainers on how to update the Helm chart r
 This repository follows the Helm chart repository best practices:
 
 1. Chart source code is stored in the `charts/` directory
-2. Packaged charts and index.yaml are stored in the `repo/` directory
+2. The GitHub Action ([helm/chart-releaser-action](https://github.com/helm/chart-releaser-action)) automatically:
+   - Packages charts when changes are pushed to the main branch
+   - Creates GitHub releases for new chart versions
+   - Updates the `index.yaml` file in the `gh-pages` branch
+   - Publishes charts to GitHub Pages
 
 ### Chart Versioning
 
@@ -165,7 +168,7 @@ We follow these versioning guidelines for our Helm charts:
 1. **Chart Versioning**: Charts follow SemVer (major.minor.patch) starting at v0.0.1 for development
 2. **Docker Image Versioning**: Each chart specifies pinned image versions for stability
 
-When updating to new application versions, we create a new chart version to reflect these changes.
+When updating to new application versions, create a new chart version to reflect these changes.
 
 ### Adding or Updating Charts
 
@@ -173,31 +176,15 @@ When making changes to existing charts or adding new charts, follow these steps:
 
 1. Make changes to the chart source code in the `charts/` directory
 2. Update the chart version in the respective `Chart.yaml` file
-3. Package the updated chart:
+3. Commit and push the changes to the main branch:
 
 ```console
-# For updating a single chart (e.g., anythingllm)
-$ helm package charts/apps/anythingllm -d repo
-
-# For updating all charts
-$ helm package charts/apps/anythingllm -d repo
-$ helm package charts/apps/openwebui -d repo
-$ helm package charts/models -d repo
+$ git add charts/
+$ git commit -m "Update chart [chart-name] to version [x.y.z]"
+$ git push origin main
 ```
 
-4. Regenerate the index.yaml file:
-
-```console
-$ helm repo index repo --url https://raw.githubusercontent.com/huggingface/dell-helm-chart/main/repo
-```
-
-5. Commit and push the changes:
-
-```console
-$ git add charts/ repo/
-$ git commit -m "Update charts and packages"
-$ git push
-```
+The GitHub Action will automatically package the charts, create releases, and update the repository.
 
 ### Testing Before Release
 

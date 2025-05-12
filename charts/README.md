@@ -31,6 +31,12 @@ Application charts for deploying AI-powered applications:
 | **openwebui** | Modern, feature-rich web UI for Ollama and LLMs | 0.1.0 |
 | **anythingllm** | Open-source AI assistant with document management, memory, and chat capabilities | 0.1.0 |
 
+## Requirements
+
+- Kubernetes 1.19+
+- Helm 3.2.0+
+- Access to Dell hardware platforms for model deployments 
+
 ## Installation
 
 ### From the Helm Repository
@@ -67,9 +73,3 @@ For detailed installation instructions for each chart, please refer to their res
 - [Models Chart Documentation](./models/README.md)
 - [AnythingLLM Chart Documentation](./apps/anythingllm/README.md)
 - [OpenWebUI Chart Documentation](./apps/openwebui/README.md)
-
-## Requirements
-
-- Kubernetes 1.19+
-- Helm 3.2.0+
-- Access to Dell hardware platforms for model deployments 

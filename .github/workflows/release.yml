@@ -21,9 +21,33 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+
+      - name: Package App Charts
+        run: |
+          # Create temp directory for packaged charts
+          mkdir -p .cr-release-packages
+          
+          # Process models chart (directly in charts directory)
+          helm package charts/models -d .cr-release-packages
+          
+          # Process all charts in apps subdirectory
+          for chart in charts/apps/*; do
+            if [ -d "$chart" ]; then
+              echo "Packaging chart: $chart"
+              helm package "$chart" -d .cr-release-packages
+            fi
+          done
+          
+          # List what was packaged
+          ls -la .cr-release-packages
+
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.7.0
         with:
           charts_dir: charts
+          packages_with_index: true
+          skip_packaging: true
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}" 

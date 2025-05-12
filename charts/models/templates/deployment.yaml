@@ -1,9 +1,11 @@
-{{- include "validateInstanceName" . -}}
-{{- include "validateNumShard" . -}}
+{{- include "validateInstanceName" . }}
+{{- include "validateNumShard" . }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Values.appName | default "tgi" }}
+  labels:
+    {{- include "models.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.numReplicas }}
   selector:
@@ -15,6 +17,7 @@ spec:
         app: {{ .Values.appName | default "tgi" }}
         hf.co/model: {{ .Values.modelId | lower | replace "/" "-" }}
         hf.co/task: text-generation
+        {{- include "models.selectorLabels" . | nindent 8 }}
     spec:
       containers:
         - name: {{ .Values.instanceName }}
@@ -73,4 +76,4 @@ spec:
       {{- if regexMatch "nvidia" .Values.instanceName }}
       nodeSelector:
         nvidia.com/gpu.product: {{ include "getNodeSelector" . | quote }}
-      {{- end }}
+      {{- end }} 

@@ -1,0 +1,15 @@
+Thank you for installing {{ .Chart.Name }} {{ .Chart.Version }}.
+
+Your {{ .Values.modelId }} model has been deployed with {{ .Values.env.NUM_SHARD }} GPUs on {{ .Values.instanceName }}.
+
+To access the model's inference API via the Kubernetes Service:
+
+  kubectl port-forward --namespace {{ .Release.Namespace }} svc/{{ .Values.appName | default "tgi" }} {{ .Values.env.PORT }}:{{ .Values.env.PORT }}
+  Visit http://localhost:{{ .Values.env.PORT }} in your browser
+
+To access the model via the Ingress:
+
+  The model is available at the root path (/) of the Ingress controller.
+
+For more information about Text Generation Inference, please visit:
+https://github.com/huggingface/text-generation-inference 

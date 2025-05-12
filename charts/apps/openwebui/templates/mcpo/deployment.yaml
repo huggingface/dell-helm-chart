@@ -1,0 +1,38 @@
+{{- if .Values.mcpo.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "openwebui.fullname" . }}-mcpo
+  labels:
+    {{- include "openwebui.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mcpo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "openwebui.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: mcpo
+  template:
+    metadata:
+      labels:
+        {{- include "openwebui.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: mcpo
+    spec:
+      containers:
+      - name: mcpo
+        image: "{{ .Values.mcpo.image.repository }}:{{ .Values.mcpo.image.tag }}"
+        imagePullPolicy: {{ .Values.mcpo.image.pullPolicy }}
+        args: ["--config", "/config/config.json"]
+        ports:
+        - containerPort: 8000
+          name: http
+        volumeMounts:
+        - name: config
+          mountPath: /config
+        resources:
+          {{- toYaml .Values.mcpo.resources | nindent 10 }}
+      volumes:
+      - name: config
+        configMap:
+          name: {{ include "openwebui.fullname" . }}-mcpo-config
+{{- end }} 

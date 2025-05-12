@@ -1,0 +1,19 @@
+{{- if .Values.mcpo.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "openwebui.fullname" . }}-mcpo
+  labels:
+    {{- include "openwebui.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mcpo
+spec:
+  type: {{ .Values.mcpo.service.type }}
+  ports:
+    - port: {{ .Values.mcpo.service.port }}
+      targetPort: 8000
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "openwebui.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: mcpo
+{{- end }} 

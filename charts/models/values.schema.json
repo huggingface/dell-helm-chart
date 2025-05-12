@@ -1,0 +1,67 @@
+{
+    "$schema": "https://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "nameOverride": {
+            "type": "string",
+            "description": "Override the name of the chart"
+        },
+        "fullnameOverride": {
+            "type": "string",
+            "description": "Override the full name of the chart"
+        },
+        "appName": {
+            "type": "string",
+            "description": "Name of the application to be deployed"
+        },
+        "instanceName": {
+            "type": "string",
+            "description": "Dell instance in which the workload will run",
+            "enum": [
+                "xe9680-nvidia-h100",
+                "xe9680-amd-mi300x",
+                "xe9680-intel-gaudi3",
+                "xe8640-nvidia-h100",
+                "r760xa-nvidia-h100",
+                "r760xa-nvidia-l40s"
+            ]
+        },
+        "numReplicas": {
+            "type": "integer",
+            "description": "Number of replicas for the deployment",
+            "minimum": 1
+        },
+        "modelId": {
+            "type": "string",
+            "description": "Hugging Face Hub model ID for the model"
+        },
+        "env": {
+            "type": "object",
+            "description": "Environment variables for Text Generation Inference",
+            "properties": {
+                "PORT": {
+                    "type": "integer",
+                    "description": "Text Generation Inference (TGI) port to be exposed"
+                },
+                "NUM_SHARD": {
+                    "type": "integer",
+                    "description": "Number of GPUs to use within each instance",
+                    "enum": [
+                        1,
+                        2,
+                        4,
+                        8
+                    ]
+                }
+            },
+            "required": [
+                "PORT",
+                "NUM_SHARD"
+            ]
+        }
+    },
+    "required": [
+        "instanceName",
+        "modelId"
+    ]
+}

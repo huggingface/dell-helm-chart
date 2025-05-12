@@ -1,0 +1,130 @@
+{{- if .Values.main.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "anythingllm.fullname" . }}
+  labels:
+    {{- include "anythingllm.labels" . | nindent 4 }}
+    app.kubernetes.io/component: main
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "anythingllm.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: main
+  strategy:
+    type: Recreate  # Ensure we don't have multiple pods accessing the same volume
+  template:
+    metadata:
+      labels:
+        {{- include "anythingllm.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: main
+    spec:
+      {{- if .Values.main.securityContext.enabled }}
+      securityContext:
+        fsGroup: {{ .Values.main.securityContext.fsGroup }}
+      {{- end }}
+      {{- if .Values.main.initContainer.enabled }}
+      initContainers:
+      - name: init-permissions
+        image: "{{ .Values.main.initContainer.image.repository }}:{{ .Values.main.initContainer.image.tag }}"
+        imagePullPolicy: {{ .Values.main.initContainer.image.pullPolicy }}
+        command: ['sh', '-c', 'mkdir -p {{ .Values.main.config.storageDir }}/plugins/agent-skills {{ .Values.main.config.storageDir }}/plugins/agent-flows && chmod -R 775 {{ .Values.main.config.storageDir }}/plugins']
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+        - name: storage-volume
+          mountPath: {{ .Values.main.config.storageDir }}
+      {{- end }}
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.main.image.repository }}:{{ .Values.main.image.tag }}"
+        imagePullPolicy: {{ .Values.main.image.pullPolicy }}
+        {{- if .Values.main.securityContext.enabled }}
+        securityContext:
+          allowPrivilegeEscalation: {{ .Values.main.securityContext.allowPrivilegeEscalation }}
+          {{- if .Values.main.securityContext.capabilities }}
+          capabilities:
+            add:
+            {{- range .Values.main.securityContext.capabilities.add }}
+              - {{ . }}
+            {{- end }}
+          {{- end }}
+          runAsUser: {{ .Values.main.securityContext.runAsUser }}
+          runAsGroup: {{ .Values.main.securityContext.runAsGroup }}
+          runAsNonRoot: {{ .Values.main.securityContext.runAsNonRoot }}
+        {{- end }}
+        ports:
+        - containerPort: {{ .Values.main.config.serverPort }}
+          name: http
+        {{- if .Values.main.probes.readiness.enabled }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.main.probes.readiness.path }}
+            port: {{ .Values.main.config.serverPort }}
+          initialDelaySeconds: {{ .Values.main.probes.readiness.initialDelaySeconds }}
+          periodSeconds: {{ .Values.main.probes.readiness.periodSeconds }}
+          timeoutSeconds: {{ .Values.main.probes.readiness.timeoutSeconds }}
+        {{- end }}
+        {{- if .Values.main.probes.liveness.enabled }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.main.probes.liveness.path }}
+            port: {{ .Values.main.config.serverPort }}
+          initialDelaySeconds: {{ .Values.main.probes.liveness.initialDelaySeconds }}
+          periodSeconds: {{ .Values.main.probes.liveness.periodSeconds }}
+          timeoutSeconds: {{ .Values.main.probes.liveness.timeoutSeconds }}
+        {{- end }}
+        volumeMounts:
+        {{- if .Values.main.persistence.enabled }}
+        - name: storage-volume
+          mountPath: {{ .Values.main.config.storageDir }}
+        {{- end }}
+        - name: mcp-servers-config
+          mountPath: {{ .Values.main.config.storageDir }}/plugins/anythingllm_mcp_servers.json
+          subPath: anythingllm_mcp_servers.json
+        env:
+        - name: SERVER_PORT
+          value: "{{ .Values.main.config.serverPort }}"
+        - name: NODE_ENV
+          value: "{{ .Values.main.config.nodeEnv }}"
+        - name: STORAGE_DIR
+          value: "{{ .Values.main.config.storageDir }}"
+        - name: LLM_PROVIDER
+          value: "{{ .Values.main.config.llmProvider }}"
+        - name: JWT_SECRET
+          value: "{{ .Values.main.config.jwtSecret | default (randAlphaNum 32) }}"
+        {{- if .Values.main.config.genericOpenAiBasePath }}
+        - name: GENERIC_OPEN_AI_BASE_PATH
+          value: "{{ .Values.main.config.genericOpenAiBasePath }}"
+        {{- end }}
+        {{- if .Values.main.config.genericOpenAiModelPref }}
+        - name: GENERIC_OPEN_AI_MODEL_PREF
+          value: "{{ .Values.main.config.genericOpenAiModelPref }}"
+        {{- end }}
+        - name: GENERIC_OPEN_AI_MODEL_TOKEN_LIMIT
+          value: "{{ .Values.main.config.genericOpenAiModelTokenLimit }}"
+        - name: VECTOR_DB
+          value: "{{ .Values.main.config.vectorDb }}"
+        {{- if .Values.main.secrets.genericOpenAiApiKey }}
+        - name: GENERIC_OPEN_AI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "anythingllm.fullname" . }}-secrets
+              key: GENERIC_OPEN_AI_API_KEY
+        {{- end }}
+        resources:
+          {{- toYaml .Values.main.resources | nindent 10 }}
+      volumes:
+      {{- if .Values.main.persistence.enabled }}
+      - name: storage-volume
+        persistentVolumeClaim:
+          claimName: {{ include "anythingllm.fullname" . }}-pvc
+      {{- end }}
+      - name: mcp-servers-config
+        configMap:
+          name: {{ include "anythingllm.fullname" . }}-config
+          items:
+          - key: MCP_SERVERS_CONFIG
+            path: anythingllm_mcp_servers.json
+{{- end }} 

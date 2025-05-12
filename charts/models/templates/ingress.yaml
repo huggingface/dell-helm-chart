@@ -2,6 +2,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .Values.appName | default "tgi" }}
+  labels:
+    {{- include "models.labels" . | nindent 4 }}
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
@@ -15,4 +17,4 @@ spec:
               service:
                 name: {{ .Values.appName | default "tgi" }}
                 port:
-                  number: {{ .Values.env.PORT | default (int 80) }}
+                  number: {{ .Values.env.PORT | default (int 80) }} 

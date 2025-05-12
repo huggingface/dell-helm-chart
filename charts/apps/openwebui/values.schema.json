@@ -1,0 +1,240 @@
+{
+    "$schema": "https://json-schema.org/draft-07/schema#",
+    "title": "OpenWebUI Chart Values",
+    "type": "object",
+    "required": [
+        "main"
+    ],
+    "properties": {
+        "nameOverride": {
+            "type": "string",
+            "description": "Override the name of the chart"
+        },
+        "fullnameOverride": {
+            "type": "string",
+            "description": "Override the fullname of the chart"
+        },
+        "main": {
+            "type": "object",
+            "required": [
+                "enabled",
+                "config"
+            ],
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Enable the main OpenWebUI component"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "repository": {
+                            "type": "string",
+                            "description": "OpenWebUI image repository"
+                        },
+                        "tag": {
+                            "type": "string",
+                            "description": "OpenWebUI image tag"
+                        },
+                        "pullPolicy": {
+                            "type": "string",
+                            "enum": [
+                                "Always",
+                                "IfNotPresent",
+                                "Never"
+                            ],
+                            "description": "Image pull policy"
+                        }
+                    }
+                },
+                "config": {
+                    "type": "object",
+                    "required": [
+                        "storageClassName"
+                    ],
+                    "properties": {
+                        "storageClassName": {
+                            "type": "string",
+                            "description": "Storage class for persistent data"
+                        },
+                        "enableOpenAI": {
+                            "type": "boolean",
+                            "description": "Enable OpenAI-compatible API"
+                        },
+                        "openaiApiBaseUrls": {
+                            "type": "string",
+                            "description": "OpenAI API base URLs (semicolon-separated)"
+                        }
+                    }
+                },
+                "secrets": {
+                    "type": "object",
+                    "properties": {
+                        "openaiApiKeys": {
+                            "type": "string",
+                            "description": "OpenAI API keys (semicolon-separated)"
+                        }
+                    }
+                },
+                "service": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "enum": [
+                                "ClusterIP",
+                                "NodePort",
+                                "LoadBalancer"
+                            ],
+                            "description": "Service type"
+                        },
+                        "port": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 65535,
+                            "description": "Service port"
+                        }
+                    }
+                },
+                "resources": {
+                    "type": "object",
+                    "properties": {
+                        "requests": {
+                            "type": "object",
+                            "properties": {
+                                "cpu": {
+                                    "type": "string",
+                                    "description": "CPU request"
+                                },
+                                "memory": {
+                                    "type": "string",
+                                    "description": "Memory request"
+                                }
+                            }
+                        },
+                        "limits": {
+                            "type": "object",
+                            "properties": {
+                                "cpu": {
+                                    "type": "string",
+                                    "description": "CPU limit"
+                                },
+                                "memory": {
+                                    "type": "string",
+                                    "description": "Memory limit"
+                                }
+                            }
+                        }
+                    }
+                },
+                "persistence": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Enable persistence"
+                        },
+                        "size": {
+                            "type": "string",
+                            "description": "Size of the persistent volume claim"
+                        }
+                    }
+                }
+            }
+        },
+        "mcpo": {
+            "type": "object",
+            "required": [
+                "enabled"
+            ],
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Enable the MCPO proxy component"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "repository": {
+                            "type": "string",
+                            "description": "MCPO image repository"
+                        },
+                        "tag": {
+                            "type": "string",
+                            "description": "MCPO image tag"
+                        },
+                        "pullPolicy": {
+                            "type": "string",
+                            "enum": [
+                                "Always",
+                                "IfNotPresent",
+                                "Never"
+                            ],
+                            "description": "Image pull policy"
+                        }
+                    }
+                },
+                "config": {
+                    "type": "object",
+                    "properties": {
+                        "serverConfig": {
+                            "type": "object",
+                            "description": "JSON configuration for MCP servers"
+                        }
+                    }
+                },
+                "service": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "enum": [
+                                "ClusterIP",
+                                "NodePort",
+                                "LoadBalancer"
+                            ],
+                            "description": "Service type"
+                        },
+                        "port": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 65535,
+                            "description": "Service port"
+                        }
+                    }
+                },
+                "resources": {
+                    "type": "object",
+                    "properties": {
+                        "requests": {
+                            "type": "object",
+                            "properties": {
+                                "cpu": {
+                                    "type": "string",
+                                    "description": "CPU request"
+                                },
+                                "memory": {
+                                    "type": "string",
+                                    "description": "Memory request"
+                                }
+                            }
+                        },
+                        "limits": {
+                            "type": "object",
+                            "properties": {
+                                "cpu": {
+                                    "type": "string",
+                                    "description": "CPU limit"
+                                },
+                                "memory": {
+                                    "type": "string",
+                                    "description": "Memory limit"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

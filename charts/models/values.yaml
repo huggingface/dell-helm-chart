@@ -1,3 +1,7 @@
+# nameOverride and fullnameOverride allow for custom naming
+nameOverride: ""
+fullnameOverride: ""
+
 # name defines the name of the application to be deployed, being the name shared
 # by the Deployment, Service and Ingress
 appName: tgi
@@ -26,4 +30,4 @@ env:
 
   # NOTE: by default TGI will use the "best" configuration for the arguments as e.g.
   # `MAX_TOTAL_TOKENS`, `MAX_INPUT_TOKENS`, etc. in order to stress out the existing
-  # resources and benefit from all the available VRAM
+  # resources and benefit from all the available VRAM 

@@ -3,3 +3,24 @@ Chart.lock
 
 # .DS_Store
 .DS_Store
+
+# Ignore Helm package files in the root directory
+/*.tgz
+
+# Logs
+logs
+*.log
+
+# Dependency directories
+node_modules/
+vendor/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+Thumbs.db
+tmp/

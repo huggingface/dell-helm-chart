@@ -1,0 +1,29 @@
+{{- if .Values.main.enabled }}
+Your AnythingLLM instance has been deployed!
+
+{{- if contains "NodePort" .Values.main.service.type }}
+To access AnythingLLM UI:
+
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "anythingllm.fullname" . }})
+  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+
+{{- else if contains "LoadBalancer" .Values.main.service.type }}
+To access AnythingLLM UI:
+
+  NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+  You can watch the status by running 'kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "anythingllm.fullname" . }}'
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "anythingllm.fullname" . }} --template "{{"{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}"}}")
+  echo http://$SERVICE_IP:{{ .Values.main.service.port }}
+
+{{- else if contains "ClusterIP" .Values.main.service.type }}
+To access AnythingLLM UI:
+
+  kubectl port-forward --namespace {{ .Release.Namespace }} svc/{{ include "anythingllm.fullname" . }} {{ .Values.main.service.port }}:{{ .Values.main.service.port }}
+  Visit http://localhost:{{ .Values.main.service.port }} in your browser
+
+{{- end }}
+{{- end }}
+
+For more information about AnythingLLM, please visit:
+https://github.com/Mintplex-Labs/anything-llm 

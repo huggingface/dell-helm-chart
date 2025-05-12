@@ -1,0 +1,18 @@
+{{- if and .Values.main.enabled .Values.main.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "openwebui.fullname" . }}-pvc
+  annotations:
+    "helm.sh/resource-policy": keep
+  labels:
+    {{- include "openwebui.labels" . | nindent 4 }}
+    app.kubernetes.io/component: main
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.main.config.storageClassName }}
+  resources:
+    requests:
+      storage: {{ .Values.main.persistence.size }}
+{{- end }} 

@@ -1,0 +1,48 @@
+{{- if .Values.main.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "openwebui.fullname" . }}
+  labels:
+    {{- include "openwebui.labels" . | nindent 4 }}
+    app.kubernetes.io/component: main
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "openwebui.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: main
+  template:
+    metadata:
+      labels:
+        {{- include "openwebui.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: main
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.main.image.repository }}:{{ .Values.main.image.tag }}"
+        imagePullPolicy: {{ .Values.main.image.pullPolicy }}
+        ports:
+        - containerPort: 8080
+          name: http
+        envFrom:
+        - configMapRef:
+            name: {{ include "openwebui.fullname" . }}-config
+        {{- if .Values.main.secrets.openaiApiKeys }}
+        - secretRef:
+            name: {{ include "openwebui.fullname" . }}-secrets
+        {{- end }}
+        volumeMounts:
+        {{- if .Values.main.persistence.enabled }}
+        - name: data
+          mountPath: /app/backend/data
+        {{- end }}
+        resources:
+          {{- toYaml .Values.main.resources | nindent 10 }}
+      volumes:
+      {{- if .Values.main.persistence.enabled }}
+      - name: data
+        persistentVolumeClaim:
+          claimName: {{ include "openwebui.fullname" . }}-pvc
+      {{- end }}
+{{- end }} 

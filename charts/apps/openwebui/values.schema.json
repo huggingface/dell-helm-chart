@@ -139,6 +139,36 @@
                             "description": "Size of the persistent volume claim"
                         }
                     }
+                },
+                "securityContext": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Enable security context settings",
+                            "default": true
+                        },
+                        "fsGroup": {
+                            "type": "integer",
+                            "description": "The group ID for volume permissions",
+                            "default": 0
+                        },
+                        "runAsUser": {
+                            "type": "integer",
+                            "description": "The user ID to run the container processes",
+                            "default": 0
+                        },
+                        "runAsGroup": {
+                            "type": "integer",
+                            "description": "The group ID to run the container processes",
+                            "default": 0
+                        },
+                        "runAsNonRoot": {
+                            "type": "boolean",
+                            "description": "Require the container to run as a non-root user",
+                            "default": false
+                        }
+                    }
                 }
             }
         },

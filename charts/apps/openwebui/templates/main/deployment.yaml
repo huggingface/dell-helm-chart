@@ -18,10 +18,20 @@ spec:
         {{- include "openwebui.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: main
     spec:
+      {{- if .Values.main.securityContext.enabled }}
+      securityContext:
+        fsGroup: {{ .Values.main.securityContext.fsGroup }}
+      {{- end }}
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.main.image.repository }}:{{ .Values.main.image.tag }}"
         imagePullPolicy: {{ .Values.main.image.pullPolicy }}
+        {{- if .Values.main.securityContext.enabled }}
+        securityContext:
+          runAsUser: {{ .Values.main.securityContext.runAsUser }}
+          runAsGroup: {{ .Values.main.securityContext.runAsGroup }}
+          runAsNonRoot: {{ .Values.main.securityContext.runAsNonRoot }}
+        {{- end }}
         ports:
         - containerPort: 8080
           name: http

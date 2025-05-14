@@ -84,6 +84,14 @@ mcpo:
             - "@modelcontextprotocol/server-search"
 ```
 
+## NFS Storage Considerations
+
+When using NFS storage with OpenWebUI's default configuration, you may encounter issues with permissions and SQLite database operations. We recommend using block storage instead of NFS.
+
+If you do choose to use NFS, your NFS StorageClass may need specific configuration to support SQLite-based applications:
+- Ensuring proper permissions on directories (777)
+- Configuring appropriate NFS mount options
+
 ## Configuration
 
 The following table lists the configurable parameters for the OpenWebUI chart:
@@ -112,6 +120,11 @@ The following table lists the configurable parameters for the OpenWebUI chart:
 | `main.resources` | Resource requests and limits for the main component | modest requests/limits |
 | `main.persistence.enabled` | Enable persistence for the main component | `true` |
 | `main.persistence.size` | Size of the persistent volume claim | `1Gi` |
+| `main.securityContext.enabled` | Enable security context settings | `true` |
+| `main.securityContext.fsGroup` | The group ID for volume permissions | `0` |
+| `main.securityContext.runAsUser` | The user ID to run the container processes | `0` |
+| `main.securityContext.runAsGroup` | The group ID to run the container processes | `0` |
+| `main.securityContext.runAsNonRoot` | Require the container to run as a non-root user | `false` |
 
 ### MCPO Component Parameters
 

@@ -93,6 +93,28 @@ entries:
   openwebui:
   - apiVersion: v2
     appVersion: latest
+    created: "2025-05-14T17:45:38.205769571Z"
+    description: OpenWebUI - A modern, feature-rich web UI for Ollama and LLMs
+    digest: d6cc21f6e50010a6805225ab57adfbc037f7ee64e6fc88998af3d7433a9bfdb2
+    home: https://github.com/open-webui/open-webui
+    icon: https://avatars.githubusercontent.com/u/158137808?s=48&v=4
+    keywords:
+    - llm
+    - ollama
+    - openai
+    - webui
+    - mcp
+    maintainers:
+    - name: Dell
+    name: openwebui
+    sources:
+    - https://github.com/open-webui/open-webui
+    type: application
+    urls:
+    - https://github.com/huggingface/dell-helm-chart/releases/download/openwebui-0.0.3/openwebui-0.0.3.tgz
+    version: 0.0.3
+  - apiVersion: v2
+    appVersion: latest
     created: "2025-05-12T19:20:57.630923568Z"
     description: OpenWebUI - A modern, feature-rich web UI for Ollama and LLMs
     digest: d0cbf313e864176cfd8ecd345e92ccf70a5bd5aab40496ac8c9543cb34d4ce07
@@ -135,4 +157,4 @@ entries:
     urls:
     - https://github.com/huggingface/dell-helm-chart/releases/download/openwebui-0.0.1/openwebui-0.0.1.tgz
     version: 0.0.1
-generated: "2025-05-12T19:20:57.630939859Z"
+generated: "2025-05-14T17:45:38.205787535Z"

@@ -20,6 +20,14 @@ main:
   secrets:
     openaiApiKeys: ""        # Optional: OpenAI API keys (semicolon-separated)
   
+  # Security context settings
+  securityContext:
+    enabled: true
+    fsGroup: 0
+    runAsUser: 0
+    runAsGroup: 0
+    runAsNonRoot: false
+  
   service:
     type: ClusterIP
     port: 8080

@@ -1,0 +1,67 @@
+Thank you for installing {{ .Chart.Name }}!
+
+Your release is named {{ .Release.Name }}.
+
+{{- if .Values.backend.enabled }}
+
+BACKEND (TGI):
+==============
+The Text Generation Inference backend is starting up...
+This may take several minutes as the model is loaded.
+
+Check backend status:
+  kubectl get pods -l app.kubernetes.io/component=backend,app.kubernetes.io/instance={{ .Release.Name }}
+
+Backend service:
+  {{ include "llama-vision.backend.name" . }}:{{ .Values.backend.service.port }}
+
+{{- end }}
+
+{{- if .Values.frontend.enabled }}
+
+FRONTEND (Gradio):
+==================
+The Gradio frontend is connecting to: {{ include "llama-vision.tgiUrl" . }}
+
+Check frontend status:
+  kubectl get pods -l app.kubernetes.io/component=frontend,app.kubernetes.io/instance={{ .Release.Name }}
+
+{{- if .Values.ingress.enabled }}
+
+Access the application:
+{{- range .Values.ingress.hosts }}
+  {{- range .paths }}
+  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .host }}{{ .path }}
+  {{- end }}
+{{- end }}
+
+{{- else if eq .Values.frontend.service.type "LoadBalancer" }}
+
+Get the application URL by running:
+  export SERVICE_IP=$(kubectl get svc {{ include "llama-vision.frontend.name" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  echo "http://$SERVICE_IP:{{ .Values.frontend.service.port }}"
+
+{{- else if eq .Values.frontend.service.type "NodePort" }}
+
+Get the application URL by running:
+  export NODE_PORT=$(kubectl get svc {{ include "llama-vision.frontend.name" . }} -o jsonpath='{.spec.ports[0].nodePort}')
+  export NODE_IP=$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}')
+  echo "http://$NODE_IP:$NODE_PORT"
+
+{{- else }}
+
+Access the application using port-forward:
+  kubectl port-forward svc/{{ include "llama-vision.frontend.name" . }} {{ .Values.frontend.service.port }}:{{ .Values.frontend.service.port }}
+  echo "http://localhost:{{ .Values.frontend.service.port }}"
+
+{{- end }}
+{{- end }}
+
+NOTES:
+======
+- The backend requires a valid Hugging Face token with access to Llama 3.2 models
+- The backend may take 5-10 minutes to become ready as it loads the 11B model
+- GPU resources are required for the backend ({{ .Values.backend.resources.limits }} GPUs)
+
+For more information, visit:
+  https://huggingface.co/meta-llama/Llama-3.2-11B-Vision-Instruct

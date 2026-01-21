@@ -1,0 +1,76 @@
+{{- if .Values.backend.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "llama-vision.backend.name" . }}
+  labels:
+    {{- include "llama-vision.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "llama-vision.backend.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "llama-vision.backend.selectorLabels" . | nindent 8 }}
+        hf.co/model: meta-llama--Llama-3.2-11B-Vision-Instruct
+        hf.co/task: text-generation
+    spec:
+      containers:
+      - name: tgi
+        image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+        imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+        ports:
+        - containerPort: 80
+          name: http
+        env:
+        - name: NUM_SHARD
+          value: {{ .Values.backend.config.numShard | quote }}
+        - name: HF_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "llama-vision.backend.name" . }}-secret
+              key: hf-token
+        - name: MODEL_ID
+          value: {{ .Values.backend.config.modelId | quote }}
+        - name: MAX_BATCH_PREFILL_TOKENS
+          value: {{ .Values.backend.config.maxBatchPrefillTokens | quote }}
+        - name: MAX_TOTAL_TOKENS
+          value: {{ .Values.backend.config.maxTotalTokens | quote }}
+        - name: MAX_INPUT_TOKENS
+          value: {{ .Values.backend.config.maxInputTokens | quote }}
+        {{- if .Values.backend.shm.enabled }}
+        volumeMounts:
+        - mountPath: /dev/shm
+          name: dshm
+        {{- end }}
+        resources:
+          {{- toYaml .Values.backend.resources | nindent 10 }}
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 120
+          periodSeconds: 30
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+      {{- if .Values.backend.shm.enabled }}
+      volumes:
+      - name: dshm
+        emptyDir:
+          medium: Memory
+          sizeLimit: {{ .Values.backend.shm.size }}
+      {{- end }}
+      {{- if .Values.backend.config.gpuProduct }}
+      nodeSelector:
+        nvidia.com/gpu.product: {{ .Values.backend.config.gpuProduct }}
+      {{- end }}
+{{- end }}

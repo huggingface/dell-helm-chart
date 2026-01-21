@@ -1,0 +1,80 @@
+## Global settings
+nameOverride: ""
+fullnameOverride: ""
+
+## Frontend (Gradio) Component Settings
+frontend:
+  enabled: true
+  image:
+    repository: # TODO: Build and push the Gradio app image
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  # Configuration
+  config:
+    # TGI backend URL (will be set automatically to backend service)
+    tgiUrl: ""  # If empty, will use http://<release>-llama-vision-backend:80
+
+  service:
+    type: ClusterIP
+    port: 7860  # Default Gradio port
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+## Backend (TGI) Component Settings
+backend:
+  enabled: true
+  image:
+    repository: registry.dell.huggingface.co/enterprise-dell-inference-meta-llama-llama-3.2-11b-vision-instruct
+    tag: tgi-3.1.0
+    pullPolicy: IfNotPresent
+
+  # Model configuration
+  config:
+    modelId: "meta-llama/Meta-Llama-3.2-11B-Vision-Instruct"
+    numShard: 1
+    maxBatchPrefillTokens: 81256
+    maxTotalTokens: 81256
+    maxInputTokens: 81128
+    # GPU configuration
+    gpuCount: 1
+    gpuProduct: ""  # e.g., "NVIDIA-L40S" - leave empty for no node selector
+
+  # Secrets
+  secrets:
+    hfToken: ""  # Required: Hugging Face token for model access
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  resources:
+    limits:
+      nvidia.com/gpu: 1
+
+  # Shared memory for GPU operations
+  shm:
+    enabled: true
+    size: 1Gi
+
+## Ingress Settings (for external access to frontend)
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations: {}
+    # nginx.ingress.kubernetes.io/rewrite-target: /
+  hosts:
+    - host: llama-vision.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  #  - secretName: llama-vision-tls
+  #    hosts:
+  #      - llama-vision.local

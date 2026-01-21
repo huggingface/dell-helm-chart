@@ -1,10 +1,10 @@
-{{- if .Values.ingress.enabled -}}
+{{- if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "z-image-turbo.fullname" . }}
+  name: {{ include "llama-vision.fullname" . }}
   labels:
-    {{- include "z-image-turbo.labels" . | nindent 4 }}
+    {{- include "llama-vision.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -33,9 +33,9 @@ spec:
             pathType: {{ .pathType }}
             backend:
               service:
-                name: {{ include "z-image-turbo.fullname" $ }}
+                name: {{ include "llama-vision.frontend.name" $ }}
                 port:
-                  number: {{ $.Values.service.port }}
+                  number: {{ $.Values.frontend.service.port }}
           {{- end }}
     {{- end }}
 {{- end }}

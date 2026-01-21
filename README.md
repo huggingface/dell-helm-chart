@@ -19,7 +19,8 @@ charts/               # Source code for the Helm charts
 │   └── templates/    # Templates for model deployments
 ├── apps/             # Charts for deploying applications
 │   ├── anythingllm/  # AnythingLLM application chart
-│   └── openwebui/    # OpenWebUI application chart
+│   ├── openwebui/    # OpenWebUI application chart
+│   └── z-image-turbo/ # Z-Image-Turbo AI image generation chart
 ```
 
 ## Available Charts
@@ -38,6 +39,7 @@ Application charts for deploying AI-powered applications:
 |-------|-------------|---------|
 | **openwebui** | Modern, feature-rich web UI for Ollama and LLMs | 0.0.2 |
 | **anythingllm** | Open-source AI assistant with document management, memory, and chat capabilities | 0.0.2 |
+| **z-image-turbo** | Ultra-fast AI image generation powered by Z-Image-Turbo diffusion model with GPU support | 0.0.1 |
 
 ## Installing Charts from the Repository
 
@@ -145,6 +147,7 @@ Each chart includes its own README with specific installation and configuration 
 - [Models Chart Documentation](./charts/models/README.md)
 - [AnythingLLM Chart Documentation](./charts/apps/anythingllm/README.md)
 - [OpenWebUI Chart Documentation](./charts/apps/openwebui/README.md)
+- [Z-Image-Turbo Chart Documentation](./charts/apps/z-image-turbo/README.md)
 
 ## Helm Repository Maintenance
 
@@ -195,11 +198,13 @@ Before pushing changes, always test your charts locally:
 $ helm lint charts/models
 $ helm lint charts/apps/anythingllm
 $ helm lint charts/apps/openwebui
+$ helm lint charts/apps/z-image-turbo
 
 # Test template rendering
 $ helm template charts/models
 $ helm template charts/apps/anythingllm
 $ helm template charts/apps/openwebui
+$ helm template charts/apps/z-image-turbo
 
 # Optional: Test installation in a development cluster
 $ helm install test-model ./charts/models --dry-run

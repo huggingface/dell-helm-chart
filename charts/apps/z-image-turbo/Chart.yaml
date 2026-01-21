@@ -1,0 +1,16 @@
+apiVersion: v2
+name: z-image-turbo
+description: Z-Image-Turbo - Ultra-fast AI image generation powered by diffusion models
+type: application
+version: 0.0.1
+appVersion: "1.0.0"
+maintainers:
+  - name: Dell
+home: https://huggingface.co/spaces/mrfakename/Z-Image-Turbo
+sources:
+  - https://huggingface.co/Tongyi-MAI/Z-Image-Turbo
+keywords:
+  - image-generation
+  - gradio
+  - diffusion
+  - gpu

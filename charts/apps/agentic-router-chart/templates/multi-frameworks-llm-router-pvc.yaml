@@ -1,0 +1,14 @@
+{{- if and .Values.multiFrameworksLlmRouter.enabled .Values.multiFrameworksLlmRouter.persistence.enabled (not .Values.multiFrameworksLlmRouter.persistence.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: multi-frameworks-llm-router-pvc
+  labels:
+{{ include "aiStack.componentLabels" (dict "component" "multi-frameworks-llm-router" "root" .) | nindent 4 }}
+spec:
+  accessModes:
+{{ toYaml .Values.multiFrameworksLlmRouter.persistence.accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ .Values.multiFrameworksLlmRouter.persistence.size }}
+{{end}}

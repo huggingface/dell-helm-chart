@@ -1,0 +1,17 @@
+{{- if .Values.multiFrameworksLlmRouter.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: multi-frameworks-llm-router-service
+  labels:
+{{ include "aiStack.componentLabels" (dict "component" "multi-frameworks-llm-router" "root" .) | nindent 4 }}
+spec:
+  type: {{ .Values.multiFrameworksLlmRouter.service.type }}
+  ports:
+    - name: {{ .Values.multiFrameworksLlmRouter.service.portName | quote }}
+      port: {{ .Values.multiFrameworksLlmRouter.service.port }}
+      targetPort: {{ .Values.multiFrameworksLlmRouter.service.targetPort }}
+      protocol: TCP
+  selector:
+       app.kubernetes.io/name: multi-frameworks-llm-router
+{{end}}

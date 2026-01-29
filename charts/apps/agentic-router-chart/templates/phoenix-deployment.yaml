@@ -1,0 +1,44 @@
+{{- if .Values.phoenix.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phoenix-deployment
+  labels:
+{{ include "aiStack.componentLabels" (dict "component" "phoenix" "root" .) | nindent 4 }}
+spec:
+  replicas: {{ .Values.phoenix.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: phoenix
+  strategy:
+    type: {{ .Values.phoenix.strategy.type }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: phoenix
+    spec:
+      {{- if .Values.phoenix.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.phoenix.imagePullSecrets | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: phoenix
+          image: "{{ .Values.images.phoenix }}"
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          env:
+            - name: PHOENIX_SQL_DATABASE_URL
+              value: {{ .Values.phoenix.env.PHOENIX_SQL_DATABASE_URL | quote }}
+            - name: PHOENIX_PORT
+              value: {{ .Values.phoenix.env.PHOENIX_PORT | quote }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.phoenix.containerPort }}
+              protocol: TCP
+          volumeMounts:
+            - mountPath: {{ .Values.phoenix.persistence.mountPath }}
+              name: phoenix-data
+      volumes:
+        - name: phoenix-data
+          persistentVolumeClaim:
+                       claimName: {{ .Values.phoenix.persistence.existingClaim | default .Values.phoenix.persistence.claimName }}
+      {{- end }}

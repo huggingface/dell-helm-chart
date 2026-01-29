@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: embedqa-deployment
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: embedqa
+  template:
+    metadata:
+      labels:
+        app: embedqa
+    spec:
+      #No need for specific GPU affinity. Most GPUs are supported.
+      imagePullSecrets:
+        - name: {{ .Values.registry.secretName }}
+      containers:
+        - name: embedqa
+          image: {{ .Values.images.embedqa }}
+          env:
+            - name: NGC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ngc-api-key
+                  key: NGC_API_KEY
+          
+          volumeMounts:
+            - mountPath: /dev/shm
+              name: dshm
+          
+          ports:
+            - containerPort: {{ .Values.services.embedqa.port }}
+          resources:
+{{ toYaml .Values.resources.embedqa | indent 12 }}
+      
+      volumes:
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 16Gi
+

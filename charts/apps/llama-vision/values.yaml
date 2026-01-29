@@ -6,9 +6,9 @@ fullnameOverride: ""
 frontend:
   enabled: true
   image:
-    repository: # TODO: Build and push the Gradio app image
+    repository: llama-vision-frontend
     tag: latest
-    pullPolicy: IfNotPresent
+    pullPolicy: Never
 
   # Configuration
   config:

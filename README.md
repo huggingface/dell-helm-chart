@@ -19,7 +19,9 @@ charts/               # Source code for the Helm charts
 │   └── templates/    # Templates for model deployments
 ├── apps/             # Charts for deploying applications
 │   ├── anythingllm/  # AnythingLLM application chart
+│   ├── agentic-router-chart/  # NVIDIA agentic-router chart
 │   └── openwebui/    # OpenWebUI application chart
+
 ```
 
 ## Available Charts
@@ -38,7 +40,7 @@ Application charts for deploying AI-powered applications:
 |-------|-------------|---------|
 | **openwebui** | Modern, feature-rich web UI for Ollama and LLMs | 0.0.2 |
 | **anythingllm** | Open-source AI assistant with document management, memory, and chat capabilities | 0.0.2 |
-
+| **agentic-router-chart** | NVIDIA agentic-router for managing LLM routing | 0.0.2 |
 ## Installing Charts from the Repository
 
 ### Adding the Repository

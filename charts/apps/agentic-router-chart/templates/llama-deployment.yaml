@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llama-instruct-deployment
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: llama-instruct
+  template:
+    metadata:
+      labels:
+        app: llama-instruct
+    spec:
+      {{ if .Values.useSupportedGPUs}}      
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
+      {{end}}
+      imagePullSecrets:
+        - name: {{ .Values.registry.secretName }}
+      containers:
+        - name: llama-instruct
+          image: {{ .Values.images.llamaInstruct }}
+          env:
+            - name: NGC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ngc-api-key
+                  key: NGC_API_KEY
+          
+          volumeMounts:
+            - mountPath: /dev/shm
+              name: dshm
+          
+          ports:
+            - containerPort: {{ .Values.services.llamaInstruct.port }}
+          resources:
+{{ toYaml .Values.resources.llamaInstruct | indent 12 }}
+      
+      volumes:
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 16Gi
+

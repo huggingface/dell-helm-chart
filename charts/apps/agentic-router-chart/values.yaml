@@ -1,0 +1,549 @@
+images:
+  llamaInstruct: nvcr.io/nim/meta/llama-3.3-70b-instruct:latest
+  nemotron: nvcr.io/nim/nvidia/llama-3.3-nemotron-super-49b-v1.5:latest
+  embedqa: nvcr.io/nim/nvidia/nv-embedqa-e5-v5:latest
+  routerController: registry.dell.huggingface.co/router-controller:latest
+  routerServer: registry.dell.huggingface.co/router-server:latest
+  multiFrameworkLlmRouter: registry.dell.huggingface.co/agentic-router:latest
+  natUi: registry.dell.huggingface.co/nemo-agent-toolkit-ui:latest
+  phoenix: arizephoenix/phoenix:latest
+
+
+#Use if specific Docker secret needed but not likely
+imagePullSecrets: []
+
+#Mandatory property
+ngcApiKey:  ""
+
+#Override this if you want to pull always
+pullPolicy: IfNotPresent
+
+
+############ BEGIN LLM CONFIGS ########
+replicaCount: 1
+
+resources:
+  llamaInstruct:
+    limits:
+      nvidia.com/gpu: 4
+  nemotron:
+    limits:
+      nvidia.com/gpu: 2
+  embedqa:
+    limits:
+      nvidia.com/gpu: 1
+
+services:
+  llamaInstruct:
+    type: ClusterIP
+    port: 8000
+  nemotron:
+    type: ClusterIP
+    port: 8000
+  embedqa:
+    type: ClusterIP
+    port: 8000
+
+
+registry:
+  createSecret: true
+  secretName: ngc-secret
+  server: nvcr.io
+  username: "$oauthtoken"
+  email: ""
+
+
+#Select nodes with GPUs in the list below to avoid selecting underpowered GPUs
+useSupportedGPUs: true
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: nvidia.com/gpu.product
+              operator: In
+              values:  ["NVIDIA-H100-80GB-HBM3","NVIDIA-H100-PCIe","NVIDIA-H100-NVL","NVIDIA-H200-SXM5"]
+
+############ END LLM CONFIGS ########
+
+
+############ BEGIN ROUTER SERVER CONFIG ########
+routerServer:
+  enabled: true
+  replicas: 1  # High availability - increased from 1
+  # Pod Anti-Affinity for high availability
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                    - router-server
+            topologyKey: kubernetes.io/hostname
+  # Deployment Strategy Configuration
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0  # Ensure zero downtime
+  # Security Context Configuration
+  securityContext:
+    # Pod-level security context
+    pod:
+      runAsNonRoot: true
+      runAsUser: 65534  # nobody user
+      runAsGroup: 65534  # nobody group
+      fsGroup: 65534
+      seccompProfile:
+        type: RuntimeDefault
+    # Container-level security context
+    container:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: false  # Triton needs write access to temp dirs
+      runAsNonRoot: true
+      runAsUser: 65534
+      capabilities:
+        drop:
+          - ALL
+        add:
+          - NET_BIND_SERVICE  # For binding to port 8000-8002
+      seccompProfile:
+        type: RuntimeDefault
+  # Health Check Configuration
+  healthChecks:
+    readinessProbe:
+      httpGet:
+        path: /v2/health/ready
+        port: 8000
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      successThreshold: 1
+      failureThreshold: 3
+    livenessProbe:
+      httpGet:
+        path: /v2/health/live
+        port: 8000
+      initialDelaySeconds: 60
+      periodSeconds: 30
+      timeoutSeconds: 10
+      successThreshold: 1
+      failureThreshold: 3
+    startupProbe:
+      httpGet:
+        path: /v2/health/ready
+        port: 8000
+      initialDelaySeconds: 10
+      periodSeconds: 5
+      timeoutSeconds: 5
+      successThreshold: 1
+      failureThreshold: 60  # 5 minutes total startup time
+  resources:
+    limits:
+      nvidia.com/gpu: 1
+      memory: "8Gi"
+      cpu: "4"  # CPU limit for resource management
+    requests:
+      nvidia.com/gpu: 1
+      memory: "8Gi"
+      cpu: "2"  # CPU request for resource management
+  service:
+    type: ClusterIP
+    ports:
+      - name: http
+        port: 8000
+        targetPort: 8000
+      - name: grpc
+        port: 8001
+        targetPort: 8001
+      - name: metrics
+        port: 8002
+        targetPort: 8002
+
+  # Model Repository Configuration (AGNOSTIC)
+  # Specify the path/URL that Triton Server should use for models
+  modelRepository:
+    path: "/model_repository"  # Default to local filesystem
+
+  shm_size: "8G"
+############ END ROUTER SERVER CONFIG ########
+
+############ BEGIN ROUTER CONTROLLER CONFIG ########
+routerController:
+  enabled: true
+  replicas: 1  # High availability - increased from 1
+
+  # Custom environment variables
+  env: []  # Custom environment variables
+  # Example usage:
+  # env:
+  #   - name: DYNAMO_API_KEY
+  #     valueFrom:
+  #       secretKeyRef:
+  #         name: dynamo-api-secret
+  #         key: DYNAMO_API_KEY
+  #   - name: CUSTOM_CONFIG
+  #     value: "custom-value"
+
+  # Pod Anti-Affinity for high availability
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                    - router-controller
+            topologyKey: kubernetes.io/hostname
+  # Deployment Strategy Configuration
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0  # Ensure zero downtime
+  # Security Context Configuration
+  securityContext:
+    # Pod-level security context
+    pod:
+      runAsNonRoot: true
+      runAsUser: 65534  # nobody user
+      runAsGroup: 65534  # nobody group
+      fsGroup: 65534
+      seccompProfile:
+        type: RuntimeDefault
+    # Container-level security context
+    container:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true  # Controller can run with read-only filesystem
+      runAsNonRoot: true
+      runAsUser: 65534
+      capabilities:
+        drop:
+          - ALL
+      seccompProfile:
+        type: RuntimeDefault
+  # Health Check Configuration
+  healthChecks:
+    readinessProbe:
+      httpGet:
+        path: /health
+        port: 8084
+      initialDelaySeconds: 15
+      periodSeconds: 10
+      timeoutSeconds: 3
+      successThreshold: 1
+      failureThreshold: 3
+    livenessProbe:
+      httpGet:
+        path: /health
+        port: 8084
+      initialDelaySeconds: 30
+      periodSeconds: 30
+      timeoutSeconds: 5
+      successThreshold: 1
+      failureThreshold: 3
+    startupProbe:
+      httpGet:
+        path: /health
+        port: 8084
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      timeoutSeconds: 3
+      successThreshold: 1
+      failureThreshold: 30  # 2.5 minutes total startup time
+  resources:
+    limits:
+      memory: "2Gi"  # Increased memory limit
+      cpu: "1"       # CPU limit for resource management
+    requests:
+      memory: "512Mi"
+      cpu: "500m"    # CPU request for resource management
+  service:
+    type: ClusterIP
+    port: 8084
+    targetPort: 8084
+  config:
+    mountPath: /app
+    logLevel: info
+    apiKeySecret: "ngc-api-key"
+    apiKeySecretKey: "NGC_API_KEY"
+
+  #Needed to support local LLM deployment
+  customConfig: |
+    policies:
+      - name: "task_router"
+        url: http://llm-router-server:8000/v2/models/task_router_ensemble/infer
+        llms:
+          - name: Brainstorming
+            api_base: http://nemotron-service:8000
+            api_key: ${NVIDIA_API_KEY}
+            model: nvidia/llama-3.3-nemotron-super-49b-v1.5
+          - name: Chatbot
+            api_base: http://llama-instruct-service:8000
+            api_key: ${NVIDIA_API_KEY}
+            model: meta/llama-3.3-70b-instruct
+          - name: Classification
+            api_base: http://llama-instruct-service:8000
+            api_key: ${NVIDIA_API_KEY}
+            model: meta/llama-3.3-70b-instruct
+          - name: Closed QA
+            api_base: http://llama-instruct-service:8000
+            api_key: ${NVIDIA_API_KEY}
+            model: meta/llama-3.3-70b-instruct
+          - name: Code Generation
+            api_base: http://nemotron-service:8000
+            api_key: ${NVIDIA_API_KEY}
+            model: nvidia/llama-3.3-nemotron-super-49b-v1.5
+          - name: Extraction
+            api_base: http://llama-instruct-service:8000
+            api_key: ${NVIDIA_API_KEY}
+            model: meta/llama-3.3-70b-instruct
+          - name: Open QA
+            api_base: http://llama-instruct-service:8000
+            api_key: ${NVIDIA_API_KEY}
+            model: meta/llama-3.3-70b-instruct
+          - name: Other
+            api_base: http://llama-instruct-service:8000
+            api_key: ${NVIDIA_API_KEY}
+            model: meta/llama-3.3-70b-instruct
+          - name: Rewrite
+            api_base: http://llama-instruct-service:8000
+            api_key: ${NVIDIA_API_KEY}
+            model: meta/llama-3.3-70b-instruct
+          - name: Summarization
+            api_base: http://llama-instruct-service:8000
+            api_key: ${NVIDIA_API_KEY}
+            model: meta/llama-3.3-70b-instruct
+          - name: Text Generation
+            api_base: http://llama-instruct-service:8000
+            api_key: ${NVIDIA_API_KEY}
+            model: meta/llama-3.3-70b-instruct
+          - name: Unknown
+            api_base: http://llama-instruct-service:8000
+            api_key: ${NVIDIA_API_KEY}
+            model: meta/llama-3.3-70b-instruct
+      - name: "complexity_router"
+        url: http://llm-router-server:8000/v2/models/complexity_router_ensemble/infer
+        llms:
+          - name: Creativity
+            api_base: http://llama-instruct-service:8000
+            api_key: ${NVIDIA_API_KEY}
+            model: meta/llama-3.3-70b-instruct
+          - name: Reasoning
+            api_base: http://nemotron-service:8000
+            api_key: ${NVIDIA_API_KEY}
+            model: nvidia/llama-3.3-nemotron-super-49b-v1.5
+          - name: Contextual-Knowledge
+            api_base: http://llama-instruct-service:8000
+            api_key: ${NVIDIA_API_KEY}
+            model: meta/llama-3.3-70b-instruct
+          - name: Few-Shot
+            api_base: http://llama-instruct-service:8000
+            api_key: ${NVIDIA_API_KEY}
+            model: meta/llama-3.3-70b-instruct
+          - name: Domain-Knowledge
+            api_base: http://llama-instruct-service:8000
+            api_key: ${NVIDIA_API_KEY}
+            model: meta/llama-3.3-70b-instruct
+          - name: No-Label-Reason
+            api_base: http://llama-instruct-service:8000
+            api_key: ${NVIDIA_API_KEY}
+            model: meta/llama-3.3-70b-instruct
+          - name: Constraint
+            api_base: http://llama-instruct-service:8000
+            api_key: ${NVIDIA_API_KEY}
+            model: meta/llama-3.3-70b-instruct
+
+############ END ROUTER CONTROLLER CONFIG ########
+
+
+############ BEGIN PHOENIX CONFIG ########
+phoenix:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: arizephoenix/phoenix
+    tag: latest
+  imagePullSecrets:
+    - name: docker-secret
+  strategy:
+    type: Recreate
+  env:
+    PHOENIX_SQL_DATABASE_URL: "sqlite:////tmp/phoenix.db"
+    PHOENIX_PORT: "6006"
+  containerPort: 6006
+  service:
+    name: phoenix-service
+    type: ClusterIP
+    portName: "6006"
+    port: 6006
+    targetPort: 6006
+  persistence:
+    enabled: true
+    pvcName: phoenix-pvc
+    existingClaim: ""     # if set, chart will use this claim instead of creating one
+    claimName: phoenix-pvc
+    accessModes: ["ReadWriteOnce"]
+    size: 100Mi
+    mountPath: /tmp
+
+############ END PHOENIX CONFIG ########
+
+############ BEGIN NAT UI CONFIG ########
+natUi:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: dellaiengineering/nemo-agent-toolkit-ui
+    tag: latest
+  strategy:
+    type: Recreate
+  command: ["/bin/sh"]
+  args: ["-c", "npm install && npm run dev"]
+  workingDir: /app
+  env:
+    # IMPORTANT: updated to point to the *prefixed* router Service name
+    NAT_BACKEND_URL: "http://multi-frameworks-llm-router-service:8000"
+    NODE_ENV: "development"
+  containerPort: 3000
+  livenessProbe:
+    enabled: true
+    exec:
+      command:
+        - wget
+        - --no-verbose
+        - --tries=1
+        - --spider
+        - http://localhost:3000
+    failureThreshold: 3
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    timeoutSeconds: 10
+  service:
+    name: nat-ui-service
+    type: NodePort
+    portName: "3000"
+    port: 3000
+    targetPort: 3000
+    nodePort: null  # set to an integer if you want a fixed nodePort
+
+############ END NAT UI CONFIG ########
+
+
+############ BEGIN MULTI FRAMEWORK LLM ROUTER CONFIG ########
+multiFrameworksLlmRouter:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: dellaiengineering/agentic-router
+    tag: 0.1.1
+  imagePullSecrets:
+    - name: docker-secret
+  strategy:
+    type: Recreate
+  args:
+    - nat
+    - serve
+    - --config_file
+    - /workspace/examples/frameworks/multi_frameworks_llm_router/src/nat_multi_frameworks_llm_router/configs/config.yml
+    - --host
+    - 0.0.0.0
+    - --port
+    - "8000"
+  env:
+    ROUTER_CONTROLLER_SERVICE: "http://llm-router-controller:8084/v1"
+  containerPort: 8000
+  livenessProbe:
+    enabled: true
+    exec:
+      command:
+        - curl
+        - -f
+        - http://localhost:8000/docs
+    failureThreshold: 3
+    initialDelaySeconds: 40
+    periodSeconds: 30
+    timeoutSeconds: 10
+  service:
+    name: multi-frameworks-llm-router-service
+    type: ClusterIP
+    portName: "8000"
+    port: 8000
+    targetPort: 8000
+  persistence:
+    enabled: true
+    pvcName: multi-frameworks-llm-router-pvc
+    existingClaim: ""
+    claimName: multi-frameworks-llm-router-pvc
+    accessModes: ["ReadWriteOnce"]
+    size: 100Mi
+    mountPath: /workspace/logs
+  config:
+    enabled: true
+    configMapName: multi-frameworks-llm-router-configmap
+    mountFilePath: /workspace/examples/frameworks/multi_frameworks_llm_router/src/nat_multi_frameworks_llm_router/configs/config.yml
+    subPathKey: config.yml
+    # This string is rendered with Helm's `tpl`, so you can reference values (e.g. phoenix service name).
+    configYml: |
+      ---
+      general:
+        use_uvloop: true
+        telemetry:
+          logging:
+            console:
+              _type: console
+              level: WARN
+            file:
+              _type: file
+              path: /tmp/multi_frameworks_llm_router.log
+              level: DEBUG
+          tracing:
+            phoenix:
+              _type: phoenix
+              endpoint: http://{{ .Values.phoenix.service.name }}:{{ .Values.phoenix.service.port }}/v1/traces
+              project: multi_frameworks_llm_router
+      functions:
+        llama_index_rag2:
+          _type: llama_index_rag2
+          llm_name: nim_llm
+          model_name: meta/llama-3.3-70b-instruct
+          embedding_name: nim_embedder
+          data_dir: ./examples/frameworks/multi_frameworks_llm_router/README.md
+        llm_router_tool:
+          _type: llm_router_tool
+          llm_name: llm_router
+      llms:
+        nim_llm:
+          _type: nim
+          model_name: meta/llama-3.3-70b-instruct
+          base_url: "http://llama-instruct-service:8000/v1"
+          temperature: 0.0
+        llm_router:
+          _type: llm_router
+          api_key: "{{ .Values.ngcApiKey }}"
+          base_url: "http://llm-router-controller:8084/v1"
+          policy: task_router
+          routing_strategy: triton
+      embedders:
+        nim_embedder:
+          _type: nim
+          model_name: nvidia/nv-embedqa-e5-v5
+          api_key: "{{ .Values.ngcApiKey }}"
+          base_url: "http://embedqa-service:8000/v1"
+          truncate: END
+      workflow:
+        _type: multi_frameworks_llm_router
+        llm: nim_llm
+        data_dir: ./examples/frameworks/multi_frameworks_llm_router/README.md
+        rag_tool: llama_index_rag2
+        llm_router_tool: llm_router_tool
+
+############ END MULTI FRAMEWORK LLM ROUTER CONFIG ########

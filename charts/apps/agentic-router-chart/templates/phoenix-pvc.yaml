@@ -1,0 +1,14 @@
+{{- if and .Values.phoenix.enabled .Values.phoenix.persistence.enabled (not .Values.phoenix.persistence.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: phoenix-pvc
+  labels:
+{{ include "aiStack.componentLabels" (dict "component" "phoenix" "root" .) | nindent 4 }}
+spec:
+   accessModes:
+{{ toYaml .Values.phoenix.persistence.accessModes | nindent 4 }}
+   resources:
+     requests:
+       storage: {{ .Values.phoenix.persistence.size }}
+{{end}}

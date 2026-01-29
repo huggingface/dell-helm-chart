@@ -1,0 +1,19 @@
+{{- if .Values.routerController.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: llm-router-controller
+  labels:
+    {{- include "llm-router.labels" . | nindent 4 }}
+    app.kubernetes.io/component: router-controller
+spec:
+  type: {{ .Values.routerController.service.type }}
+  ports:
+    - port: {{ .Values.routerController.service.port }}
+      targetPort: {{ .Values.routerController.service.targetPort }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "llm-router.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: router-controller
+{{- end }} 

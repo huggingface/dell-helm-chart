@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nemotron-deployment
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: nemotron
+  template:
+    metadata:
+      labels:
+        app: nemotron
+    spec:
+      {{ if .Values.useSupportedGPUs}}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
+      {{end}}
+      
+      imagePullSecrets:
+        - name: {{ .Values.registry.secretName }}
+      containers:
+        - name: nemotron
+          image: {{ .Values.images.nemotron }}
+          env:
+            - name: NGC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ngc-api-key
+                  key: NGC_API_KEY
+          volumeMounts:
+            - mountPath: /dev/shm
+              name: dshm
+          ports:
+            - containerPort: {{ .Values.services.nemotron.port }}
+          resources:
+{{ toYaml .Values.resources.nemotron | indent 12 }}
+ 
+      volumes:
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 16Gi
+

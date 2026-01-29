@@ -1,0 +1,65 @@
+{{- if .Values.multiFrameworksLlmRouter.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multi-frameworks-llm-router-deployment
+  labels:
+{{ include "aiStack.componentLabels" (dict "component" "multi-frameworks-llm-router" "root" .) | nindent 4 }}
+spec:
+  replicas: {{ .Values.multiFrameworksLlmRouter.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: multi-frameworks-llm-router
+  strategy:
+    type: {{ .Values.multiFrameworksLlmRouter.strategy.type }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: multi-frameworks-llm-router
+    spec:
+      {{- if .Values.multiFrameworksLlmRouter.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.multiFrameworksLlmRouter.imagePullSecrets | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: multi-frameworks-llm-router
+          image: "{{ .Values.images.multiFrameworkLlmRouter }}"
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          args:
+{{ toYaml .Values.multiFrameworksLlmRouter.args | nindent 12 }}
+          env:
+            - name: ROUTER_CONTROLLER_SERVICE
+              value: {{ .Values.multiFrameworksLlmRouter.env.ROUTER_CONTROLLER_SERVICE | quote }}
+            - name: NVIDIA_API_KEY
+              value: {{ .Values.ngcApiKey | quote }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.multiFrameworksLlmRouter.containerPort }}
+              protocol: TCP
+          {{- if and .Values.multiFrameworksLlmRouter.livenessProbe .Values.multiFrameworksLlmRouter.livenessProbe.enabled }}
+          livenessProbe:
+            exec:
+              command:
+{{ toYaml .Values.multiFrameworksLlmRouter.livenessProbe.exec.command | nindent 16 }}
+            failureThreshold: {{ .Values.multiFrameworksLlmRouter.livenessProbe.failureThreshold }}
+            initialDelaySeconds: {{ .Values.multiFrameworksLlmRouter.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.multiFrameworksLlmRouter.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.multiFrameworksLlmRouter.livenessProbe.timeoutSeconds }}
+          {{- end }}
+          volumeMounts:
+            - name: router-logs
+              mountPath: {{ .Values.multiFrameworksLlmRouter.persistence.mountPath }}
+            - name: router-config
+              mountPath: {{ .Values.multiFrameworksLlmRouter.config.mountFilePath }}
+              subPath: {{ .Values.multiFrameworksLlmRouter.config.subPathKey }}
+      volumes:
+        - name: router-logs
+          persistentVolumeClaim:
+            claimName: {{ .Values.multiFrameworksLlmRouter.persistence.existingClaim | default .Values.multiFrameworksLlmRouter.persistence.claimName }}
+        - name: router-config
+          configMap:
+            name: multi-frameworks-llm-router-configmap
+            items:
+              - key: config.yml
+                path: config.yml
+{{end}}

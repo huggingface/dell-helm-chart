@@ -1,0 +1,13 @@
+{{- if and .Values.multiFrameworksLlmRouter.enabled .Values.multiFrameworksLlmRouter.config.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: multi-frameworks-llm-router-configmap
+  annotations:
+    use-subpath: "true"
+  labels:
+{{ include "aiStack.componentLabels" (dict "component" "multi-frameworks-llm-router" "root" .) | nindent 4 }}
+data:
+  config.yml: |
+{{ tpl .Values.multiFrameworksLlmRouter.config.configYml . | nindent 4 }}
+{{end}}

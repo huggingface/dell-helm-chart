@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: phoenix-service
+  labels:
+{{ include "aiStack.componentLabels" (dict "component" "phoenix" "root" .) | nindent 4 }}
+spec:
+  type: {{ .Values.phoenix.service.type }}
+  ports:
+    - name: {{ .Values.phoenix.service.portName | quote }}
+      port: {{ .Values.phoenix.service.port }}
+      targetPort: {{ .Values.phoenix.service.targetPort }}
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: phoenix

@@ -1,0 +1,20 @@
+{{- if .Values.natUi.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: nat-ui-service
+  labels:
+{{ include "aiStack.componentLabels" (dict "component" "nat-ui" "root" .) | nindent 4 }}
+spec:
+  type: {{ .Values.natUi.service.type }}
+  ports:
+    - name: {{ .Values.natUi.service.portName | quote }}
+      port: {{ .Values.natUi.service.port }}
+      targetPort: {{ .Values.natUi.service.targetPort }}
+      protocol: TCP
+      {{- if and (eq .Values.natUi.service.type "NodePort") .Values.natUi.service.nodePort }}
+      nodePort: {{ .Values.natUi.service.nodePort }}
+      {{- end }}
+  selector:
+       app.kubernetes.io/name: nat-ui
+{{- end }}

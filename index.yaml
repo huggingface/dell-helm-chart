@@ -1,5 +1,16 @@
 apiVersion: v1
 entries:
+  agentic-router-chart:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2026-01-29T11:39:04.240391455Z"
+    description: Helm chart to deploy the Agentic Router Application
+    digest: e2d03bb85b5585e84b9b9d4426a48dc7f3fd1013cefd72d07336e3a5749f172f
+    name: agentic-router-chart
+    type: application
+    urls:
+    - https://github.com/huggingface/dell-helm-chart/releases/download/agentic-router-chart-0.1.0/agentic-router-chart-0.1.0.tgz
+    version: 0.1.0
   anythingllm:
   - apiVersion: v2
     appVersion: latest
@@ -157,4 +168,4 @@ entries:
     urls:
     - https://github.com/huggingface/dell-helm-chart/releases/download/openwebui-0.0.1/openwebui-0.0.1.tgz
     version: 0.0.1
-generated: "2025-05-14T17:45:38.205787535Z"
+generated: "2026-01-29T11:39:04.725418196Z"

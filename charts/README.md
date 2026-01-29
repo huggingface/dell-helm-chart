@@ -11,6 +11,7 @@ charts/
 ├── apps/             # Charts for deploying applications
 │   ├── openwebui/    # OpenWebUI chart
 │   ├── anythingllm/  # AnythingLLM chart
+│   ├── agentic-router-chart/  # NVIDIA agentic-router chart
 │   └── ...           # Other application charts
 ```
 
@@ -30,6 +31,7 @@ Application charts for deploying AI-powered applications:
 |-------|-------------|---------|
 | **openwebui** | Modern, feature-rich web UI for Ollama and LLMs | 0.0.2 |
 | **anythingllm** | Open-source AI assistant with document management, memory, and chat capabilities | 0.0.2 |
+| **agentic-router-chart** | NVIDIA agentic-router for managing LLM routing | 0.0.2 |
 
 ## Requirements
 

@@ -31,7 +31,7 @@ Application charts for deploying AI-powered applications:
 |-------|-------------|---------|
 | **openwebui** | Modern, feature-rich web UI for Ollama and LLMs | 0.0.2 |
 | **anythingllm** | Open-source AI assistant with document management, memory, and chat capabilities | 0.0.2 |
-| **agentic-router-chart** | NVIDIA agentic-router for managing LLM routing | 0.0.2 |
+| **agentic-smart-router** | NVIDIA agentic-smart-router for managing LLM routing | 0.0.2 |
 
 ## Requirements
 
@@ -52,6 +52,7 @@ helm repo update
 helm install llama3 deh/models
 helm install openwebui deh/openwebui
 helm install anythingllm deh/anythingllm
+helm install agentic-smart-router deh/agentic-smart-router
 ```
 
 ### From Local Source

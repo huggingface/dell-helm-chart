@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-api
+  labels:
+    {{- include "sa.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "sa.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        {{- include "sa.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      initContainers:
+        - name: wait-for-postgres
+          image: busybox:1.35
+          command:
+            - sh
+            - -c
+            - |
+              until nc -z {{ include "sa.postgresName" . }} 5432; do
+                echo "Waiting for postgres..."; sleep 3
+              done
+      containers:
+        - name: api
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.targetPort }}
+              protocol: TCP
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-db-credentials
+                  key: DATABASE_URL
+            - name: CODE_ANALYZER_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-api-keys
+                  key: CODE_ANALYZER_API_KEY
+            - name: CODE_FIXER_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-api-keys
+                  key: CODE_FIXER_API_KEY
+            - name: CODE_CHAT_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-api-keys
+                  key: CODE_CHAT_API_KEY
+            - name: ADMIN_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-api-keys
+                  key: ADMIN_API_KEY
+          envFrom:
+            - configMapRef:
+                name: {{ .Release.Name }}-config
+          volumeMounts:
+            - name: jwt-keys
+              mountPath: /app/keys
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            failureThreshold: 5
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: jwt-keys
+          secret:
+            secretName: {{ .Values.jwt.existingSecret | default (printf "%s-jwt-keys" .Release.Name) }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-api
+  labels:
+    {{- include "sa.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "sa.selectorLabels" . | nindent 4 }}

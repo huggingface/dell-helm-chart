@@ -1,0 +1,84 @@
+# =============================================================================
+# Super Analyzer — values.yaml
+# Put secrets in secrets.yaml (gitignored)
+# =============================================================================
+
+# --- API image ---
+image:
+  repository: "registry.dell.huggingface.co/super-analyzer"
+  tag: "1.0.5"
+  pullPolicy: Always
+
+secrets:
+  dbPassword: "CHANGE_ME"
+  jwtPrivateKey: "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2UUlCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQktjd2dnU2pBZ0VBQW9JQkFRQzNaOFRRVGJhMVlYTlIKWngwMC83M2JIamcvWnBQakRhUklQRzdPaWt4VmZNMU1xd1R0NjBpendLRzN4a0FSSm1lYU5Od01KUmVrVk9KUgpwNFU4aUVkamRNV3I2WGJRc1BuK1plSk1kbkhETmZVZS93aXVmdjBFZTZ6U2k3V2dKRXU1S3BFZUlJcXNGS3lLCk9heERSQmxSMDBrWnhxSS9BK3htcEJ3Z3c4YzkwWUdDWWo2ZDhUV0E2TkI4UlZXeVQ4dFlTRlZCbHFaaTFkRWUKb1IwMTFMaFRRbHZOdjQ3ei9kbGJRZFU4eG5Jd3ZFYmR6TlcrbzA0c0R1NUJlUDNYcVgrVEs3TWsxdVlCYi9LUApVK2pJZGJFV1ZlVzdOWFlwUXNGNTF3OFgwTERBOG0zVXRlcHZaUmhzNTRGQWh1WkluU3BLa0h1SVNVelNUTEp5CkNSWS9STUR6QWdNQkFBRUNnZ0VBRnNPd0I2VGx2VHl6eWhKUTZ6K2xDcG9GSkVWd3JMbUlQeGtWTGRpM29kTEUKVHJSWmY4aDQ5U3EvUithNUZBZmV5eUt0ZjJwcE5WSDk1Mkd5SlhISzNwcmpZRE94dGpTSlN4ek5TbTFYTUlJMQpneHZuc1hUOHBiNU9GTElYb0tGd3JyS01ZWjlyWnZHSCt2NHVsZ2pSVmJreWRSc1ZEMXBHMFBTa3N5SnB6QS9MCnJSbmJJZElndC93bTlIV0t5NGdzdTgyM083bXhVdWV2bEdsK2FsWFdnVW92c2Q4RFlhWW5IWDRvRHZWUzZVUDAKT2NkaGZjVlZGNVc5dm02SDJsUUVhT0RyYWJCRVJ6NUMrMWJMT3FJSDhyWERmRnZML3lweHlwS0NYMXJ1ZUkyYQovT0ZqRytlOTdVaVRHSVNzNlFHMm9PQkxycG0vb3piVjcrNnNrU0hoVVFLQmdRRG1oZ0lvUnRrL2NqQTNvRUVtCkFZRm9xYmRBWm9ob3l4eUJibGdidzc3WTJmZEliOEkyWVFrQ1NzWnRuNm5GMUd4WWd3RWpySERPdExpWFU0T0YKd0g2blM0M2hPWWxuOTdScjhxaGdPRVI0eHdnMXhtRjFCbFlKYUV4WXlqMUJ2UFZTM2pUUlk5Z1M3MVNKdUhxcApLZ2d6bGFUNlBtbWNhMTFlU0R5T0tFUnJRd0tCZ1FETHJMQ2xPbTVoQmdZQWJUa2d5VzdnOFozM3R5cFhzZGdyClFncFNNSW9SaWp2OFlEZXZZYVB6bXBscEh1YlVxQUVFb1BUcCtXOXFCWGNQRjMzbTk0Y0lCajIyNWVKUnVnZisKTnNZNy96S2FKU3hLWVZTMWoyd2xZZFNUZUJGYXE0MldRQ1p1Tmo3dWhCYXBJbTk4QmlnVi9HaVJpK3JxcSsrSApUNDkrYXl3QWtRS0JnQVhtL0hzbmhUeDRvZjlxblFCcUhYUWVsRkNUejM1UFpRVnpXOUlxS3VMR2dleGE0REFnClArak5IVk9GT1FXVnNNaDdZallWbmpYTXJzVkJJQ2Iyak1lZnlad3dxdkg4aDZRVDdIZTZPUmFXa2dFK2VSUlQKK3pQMmRhMzRUNlUxUDFyRjBiaGl4QStJRFRRUmd5Sjlyd1FUR3N4RmVOTEdkUGVMQmZIbDJncWRBb0dCQUwxbAp2Zkk0RHRLY2RsSkpQem1VOTAyb2dWd01jUXlSYmRKMEhBTG43a3gzUG1ibTFvRjVpNnVKVlNWaXZnWjhvRTI4Cm0yTkVOKzNnWFNHa2w4aUMzNGQvdmozcE1mY0x4a2tJaUhqY1RDTDVkR0ZLZHlwS3o2ZEhmUlVSTHhvZ3M0NUgKNHpUVHJ0dS82dzZtM2dMMytxalBTakltYVhLR0pqeXVxR0pIcU9oeEFvR0FYNXdicS9CNWVadzdhelBSUDFPUgo4K2YyM3V4TXM0c1U4NVlOSXZwcllFeWZYRG42RWs0VlJWUC9OQjlxR3JkWVZBU1psRkQvVHVpTS9oNGU1QnNJClUwa2lITkNEU1VRSm80aTZMdW5pYy96TWFoUWNXMGI2Ti90YVRGNjFyRERDZFp2aTB1RlNIZ3lMNzNLM2tPVXcKbEUxS3BRZ0ZyR0hlc285bjE5elQvN1k9Ci0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K"
+  jwtPublicKey: "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUF0MmZFMEUyMnRXRnpVV2NkTlArOQoyeDQ0UDJhVDR3MmtTRHh1em9wTVZYek5US3NFN2V0SXM4Q2h0OFpBRVNabm1qVGNEQ1VYcEZUaVVhZUZQSWhIClkzVEZxK2wyMExENS9tWGlUSFp4d3pYMUh2OElybjc5Qkh1czBvdTFvQ1JMdVNxUkhpQ0tyQlNzaWptc1EwUVoKVWROSkdjYWlQd1BzWnFRY0lNUEhQZEdCZ21JK25mRTFnT2pRZkVWVnNrL0xXRWhWUVphbVl0WFJIcUVkTmRTNApVMEpiemIrTzgvM1pXMEhWUE1aeU1MeEczY3pWdnFOT0xBN3VRWGo5MTZsL2t5dXpKTmJtQVcveWoxUG95SFd4CkZsWGx1elYyS1VMQmVkY1BGOUN3d1BKdDFMWHFiMlVZYk9lQlFJYm1TSjBxU3BCN2lFbE0wa3l5Y2drV1AwVEEKOHdJREFRQUIKLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg=="
+
+  adminApiKey: "CHANGE_ME"
+  analyzerApiKey: "not-needed"
+  fixerApiKey: "not-needed"
+  chatApiKey: "not-needed"    # your Nvidia API key
+
+replicaCount: 1
+
+# --- Service ---
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 8080
+
+# --- LLM endpoints (non-secret) ---
+llm:
+  defaultModel: "openai/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16"
+  defaultApiBase: "http://1.2.3.4:8001/v1"
+  analyzerModel: ""
+  analyzerApiBase: ""
+  fixerModel: ""
+  fixerApiBase: ""
+  chatModel: ""
+  chatApiBase: ""
+
+# --- App settings ---
+config:
+  AUTH_REQUIRED: "false"
+  CODE_ANALYZER_USE_FIM: "false"
+  CODE_ANALYZER_MAX_FILE_LINES: "2000"
+  CODE_ANALYZER_EXTENDED_THINKING: "false"
+  CODE_ANALYZER_CRITIC_THINKING_BUDGET: "0"
+  CODE_ANALYZER_GUARDIAN_THINKING_BUDGET: "0"
+  CODE_ANALYZER_DISABLE_CRITIC: "false"
+  JWT_PRIVATE_KEY_FILE: "/app/keys/jwt_private.pem"
+  JWT_PUBLIC_KEY_FILE: "/app/keys/jwt_public.pem"
+  JWT_EXPIRE_HOURS: "24"
+
+# --- JWT keys ---
+# Set existingSecret to use a pre-created secret (recommended)
+# Leave empty to let Helm create it from secrets.jwtPrivateKey/jwtPublicKey
+jwt:
+  existingSecret:
+
+# --- Postgres ---
+postgres:
+  image: "postgres:16-alpine"
+  persistence:
+    storageClass: "local-path"
+    size: 10Gi
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+
+# --- API resources ---
+resources:
+  requests:
+    cpu: 250m
+    memory: 256Mi
+  limits:
+    cpu: "2"
+    memory: 2Gi
+
+nodeSelector: {}
+tolerations: []

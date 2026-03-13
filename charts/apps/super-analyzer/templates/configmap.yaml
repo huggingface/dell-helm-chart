@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-config
+  labels:
+    {{- include "sa.labels" . | nindent 4 }}
+data:
+  CODE_ANALYZER_MODEL: {{ .Values.llm.analyzerModel | default .Values.llm.defaultModel | quote }}
+  CODE_ANALYZER_API_BASE: {{ .Values.llm.analyzerApiBase | default .Values.llm.defaultApiBase | quote }}
+  CODE_FIXER_MODEL: {{ .Values.llm.fixerModel | default .Values.llm.defaultModel | quote }}
+  CODE_FIXER_API_BASE: {{ .Values.llm.fixerApiBase | default .Values.llm.defaultApiBase | quote }}
+  CODE_CHAT_MODEL: {{ .Values.llm.chatModel | default .Values.llm.defaultModel | quote }}
+  CODE_CHAT_API_BASE: {{ .Values.llm.chatApiBase | default .Values.llm.defaultApiBase | quote }}
+  {{- range $key, $val := .Values.config }}
+  {{ $key }}: {{ $val | quote }}
+  {{- end }}

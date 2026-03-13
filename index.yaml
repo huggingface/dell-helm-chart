@@ -168,4 +168,15 @@ entries:
     urls:
     - https://github.com/huggingface/dell-helm-chart/releases/download/openwebui-0.0.1/openwebui-0.0.1.tgz
     version: 0.0.1
-generated: "2026-01-30T16:40:08.926876003Z"
+  super-analyzer:
+  - apiVersion: v2
+    appVersion: 1.0.4
+    created: "2026-03-13T16:30:29.42429724Z"
+    description: Super Analyzer — API + Postgres, external LLM endpoints
+    digest: c08406843b0c751530369b55b0f4122e5f54b782cfeafc0829a2ea98affc3319
+    name: super-analyzer
+    type: application
+    urls:
+    - https://github.com/huggingface/dell-helm-chart/releases/download/super-analyzer-1.0.0/super-analyzer-1.0.0.tgz
+    version: 1.0.0
+generated: "2026-03-13T16:30:29.424314301Z"
